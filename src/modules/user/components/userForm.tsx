@@ -23,8 +23,8 @@ const UserForm = () => {
 
     try {
         const { data } = await addUser({ variables: { name } });
-        setNewUser(data.addUser); // Set the new user data
-        setName(''); // Clear the input after successful submission
+        setNewUser(data.addUser); 
+        setName(''); 
     } catch (err) {
       console.error(err);
     }
