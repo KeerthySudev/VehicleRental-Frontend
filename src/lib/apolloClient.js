@@ -1,11 +1,12 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client';
 
 const client = new ApolloClient({
-  link: new HttpLink({
-    uri: 'http://localhost:5000/graphql', // Adjust this to your backend's GraphQL endpoint
+  link: createUploadLink({
+    uri: 'http://localhost:5000/graphql',
   }),
   cache: new InMemoryCache(),
 });
-console.log('Apollo Client:', client);
 
 export default client;
+

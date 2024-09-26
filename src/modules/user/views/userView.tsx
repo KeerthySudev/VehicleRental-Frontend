@@ -5,16 +5,20 @@ import client from '../../../lib/apolloClient';
 import CustomerRegistrationForm from '../components/test';
 import LoginForm from '../components/login';
 import AddVehicleForm from '../components/vehicleform';
-import AddImageForm from '../components/image';
+import VehicleForm from '../components/vehicle';
+import ImageForm from '../components/image';
+import PrismaUserForm from '../components/prismauser';
 
 const AddUserPage = () => {
   return (
     <ApolloProvider client={client}>
-      <CustomerRegistrationForm/>
+      {/* <CustomerRegistrationForm/>
       <UserForm />
       <LoginForm/>
+      <PrismaUserForm/> */}
       <AddVehicleForm/>
-      <AddImageForm/>
+      <ImageForm/>
+      <VehicleForm/>
    </ApolloProvider>
   );
 };
