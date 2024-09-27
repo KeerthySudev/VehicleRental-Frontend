@@ -1,9 +1,12 @@
-import AddUserPage from "@/modules/user/views/userView";
+import AddUserPage from "@/modules/test/views/testView";
+import HomeView from "@/modules/test/views/homeView";
 
 const Home = () => {
   return (
     <div>
-      <AddUserPage />
+      
+      <HomeView/>
+      {/* <AddUserPage/> */}
     </div>
   );
 };
