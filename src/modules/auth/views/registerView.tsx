@@ -2,17 +2,15 @@
 import { ApolloProvider } from '@apollo/client';
 import client from '../../../lib/apolloClient';
 import Navbar from '../components/navbar/navbar';
-import HomePage from '../components/home/home';
-import VehiclePage from '../components/vehicles/vehicles';
+import RegistrationForm from '../components/register/register';
 
-const HomeView = () => {
+
+const RegisterView = () => {
   return (
     <ApolloProvider client={client}>
-       <Navbar/>
-       {/* <HomePage/> */}
-       <VehiclePage/>
+        <Navbar/>
+        <RegistrationForm/>
    </ApolloProvider>
   );
 };
-export default HomeView;
-
+export default RegisterView;

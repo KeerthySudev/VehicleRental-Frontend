@@ -1,10 +1,10 @@
 
-import HomeView from "@/modules/user/views/homeView";
+import VehicleView from "@/modules/admin/views/vehicleView";
 
 const Home = () => {
   return (
     <div>     
-      <HomeView/>
+      <VehicleView/>
     </div>
   );
 };

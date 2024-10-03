@@ -1,10 +1,9 @@
-
-import HomeView from "@/modules/user/views/homeView";
+import ProfileView from "@/modules/user/views/profileView";
 
 const Home = () => {
   return (
     <div>     
-      <HomeView/>
+      <ProfileView/>
     </div>
   );
 };

@@ -1,10 +1,9 @@
-
-import HomeView from "@/modules/user/views/homeView";
+import LoginView from "@/modules/auth/views/loginView";
 
 const Home = () => {
   return (
     <div>     
-      <HomeView/>
+     <LoginView/>
     </div>
   );
 };

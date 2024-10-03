@@ -1,14 +1,12 @@
 "use client"
 import { ApolloProvider } from '@apollo/client';
 import client from '../../../lib/apolloClient';
-import VehicleForm from '../components/vehicle';
-import ImageForm from '../components/image';
+import CustomerRegistrationForm from '../components/test';
 
 const AddUserPage = () => {
   return (
     <ApolloProvider client={client}>
-      <ImageForm/>
-      <VehicleForm/>
+      <CustomerRegistrationForm/>
    </ApolloProvider>
   );
 };

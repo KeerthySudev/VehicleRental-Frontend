@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useMutation, gql } from "@apollo/client";
+import { useRouter } from 'next/navigation';
 
 const LOGIN_USER = gql`
   mutation Login($email: String!, $password: String!) {
@@ -16,12 +17,14 @@ const LOGIN_USER = gql`
         phone
         pincode
         state
+        role
       }
     }
   }
 `;
 
 const LoginForm  = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [login, { data, loading, error }] = useMutation(LOGIN_USER);
@@ -30,7 +33,22 @@ const LoginForm  = () => {
     e.preventDefault();
 
     try {
-      await login({ variables: { email, password } });
+      const { data } = await login({ variables: { email, password } });
+      
+      if (data?.login) {
+        // Store the token in sessionStorage
+        sessionStorage.setItem('authToken', data.login.token);
+        
+        // Store user data in sessionStorage (optional, but can be useful)
+        sessionStorage.setItem('userData', JSON.stringify(data.login.user));
+        
+        // Check user role and redirect
+        if (data.login.user.role === 'admin') {
+          router.push('/vehicles');
+        } else {
+          router.push('/');
+        }
+      }
     } catch (err) {
       console.error(err);
     }

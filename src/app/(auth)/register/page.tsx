@@ -1,10 +1,9 @@
-
-import HomeView from "@/modules/user/views/homeView";
+import RegisterView from "@/modules/auth/views/registerView";
 
 const Home = () => {
   return (
     <div>     
-      <HomeView/>
+     <RegisterView/>
     </div>
   );
 };

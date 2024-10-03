@@ -1,0 +1,102 @@
+.container{
+    height: auto;
+    width: 100%;
+    display: flex;
+}
+.banner{
+    height: 660px;
+    width: 1296px;
+    display: flex;
+    flex-direction: row;
+    background-color: #5937E0;
+    border-radius: 40px;
+    margin: 60px 100px;
+}
+.content{
+    height: 503px;
+    width: 686px;
+    display: flex;
+    flex-direction: column;
+    margin: 72px;
+}
+.content h1{
+    font-family: Poppins, sans-serif;
+    font-weight: bolder;
+    font-size: 50px;
+    color: #FAFAFA;
+}
+.content p{
+    font-family: Poppins, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    color: #FAFAFA;
+}
+.content button{
+    border-radius: 20px;
+    height: 40px;
+    width: 180px;
+    margin-top: 32px;
+     margin-left:48px ;
+     border: none;
+     font-family: Poppins, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    background-color: #FF9E0C;
+}
+.form h3{
+    font-family: Poppins, sans-serif;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 0;
+    margin-top: 10px;
+}
+.form{
+    height: 300px;
+    width: 416px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    margin: 170px 72px;
+    border-radius: 20px;
+}
+ 
+.form form{
+    display: flex;
+    flex-direction: column;
+}
+.form input{
+    top: 30px;
+    height: 38px;
+        width: 336px;
+        margin-bottom: 12px;
+         margin-left:23px ;
+         background-color: #FAFAFA;
+         border: none;
+         border-radius: 20px;
+         color: black;
+         font-family: Poppins, sans-serif;
+         font-size: 16px;
+         position: relative;
+}
+.form button{
+        border-radius: 20px;
+        height: 40px;
+        width: 180px;
+        margin-top: 32px;
+         margin-left:98px ;
+         border: none;
+         font-family: Poppins, sans-serif;
+        font-weight: bold;
+        font-size: 16px;
+        color: white;
+        background-color: #FF9E0C;
+}
+ .error{
+    color: red;
+    margin-left:34px ;
+    font-family: Poppins, sans-serif;
+         font-size: 16px;
+         margin-bottom: -15px;
+ }

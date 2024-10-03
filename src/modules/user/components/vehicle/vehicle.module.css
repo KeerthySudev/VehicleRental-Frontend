@@ -1,0 +1,99 @@
+
+
+.container{
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+}
+
+.vehicle{
+    height: 557px;
+    width: 636px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 60px;
+    margin-left:72px ;
+    gap: 20px;
+}
+.specification{
+    height: 740px;
+    width: 636px;
+    display: flex;
+    flex-direction: column;
+    /* background-color: antiquewhite; */
+    margin-top: 60px;
+}
+.vehicleDetails{
+    height: 437px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.vehicleDetails img{
+    height: 303px;
+    position: relative;
+    top: -40px;
+    border-radius: 12px;
+    width: 500px;
+}
+.images{
+    height: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+}
+
+.images img{
+    width: 140px;
+    border-radius: 12px;
+}
+
+.name{
+    height: 114px;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    /* margin-top: 65px; */
+}
+
+.name h2, .name h3{
+    font-family: Poppins , sans-serif;
+    font-weight: bold;
+    font-size: 36px;
+    margin: 0;
+}
+
+.name h3{
+    font-size: 20px;
+    color: #5937E0;
+}
+
+.description{
+    font-family: Poppins , sans-serif;
+    font-weight: 50px;
+    font-size: 23px;
+}
+.technical{
+    font-family: Poppins , sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    color: #5937E0;
+}
+
+.specification button{
+    border-radius: 12px;
+    height: 50px;
+    width: 305px;
+    margin-top: 40px;
+     margin-left:24px ;
+     border: none;
+     font-family: Poppins , sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    background-color: #5937E0;
+}

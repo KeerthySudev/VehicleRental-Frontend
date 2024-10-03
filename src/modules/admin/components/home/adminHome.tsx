@@ -1,63 +1,39 @@
 "use client";
 
 import React from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import styles from "./vehicles.module.css";
+import styles from "./adminHome.module.css";
+import vehicleServices from "../../services/vehicleServices";
+import { Vehicle } from "../../../../app/types/vehicleType";
 
-const GET_ALL_VEHICLES = gql`
-  query GetAllVehicles {
-    getAllVehicles {
-      id
-      name
-      description
-      price
-      primaryImage
-      secondaryImage
-      availableQty
-      manufacture
-      model
-    }
-  }
-`;
-
-const VehiclePage = () => {
-  interface Vehicle {
-    id: number;
-    name: string;
-    model: string;
-    description: string;
-    manufacture: string;
-    price: number;
-    availableQty: number;
-    primaryImage: string;
-    secondaryImage: string;
-  }
-
+const HomePageAdmin = () => {
   const router = useRouter();
-  const { data } = useQuery(GET_ALL_VEHICLES);
+  const { data, loading, error } = useQuery(vehicleServices.GET_ALL_RENTABLE_VEHICLES);
 
   const handleClick = (vehicleId: any) => {
-    router.push(`http://localhost:3000?id=${encodeURIComponent(vehicleId)}`);
+    router.push(
+      `http://localhost:3000/vehicle?id=${encodeURIComponent(vehicleId)}`
+    );
   };
-
+  if (loading) return <p>Loading ...</p>;
+  if (error) return <p>Error fetching..: {error.message}</p>;
   return (
     <div className={styles.vehicleContainer}>
       <div className={styles.title}>
-        <h2>Choose the car that suits you</h2>
+        <h2>Available cars..</h2>
         {/* <a href="">View All</a> */}
       </div>
-
       {data && (
         <div className={styles.cardContainer}>
-          {data.getAllVehicles.map((vehicle: Vehicle) => (
+          {data.getAllRentableVehicles.map((vehicle: Vehicle) => (
             <div key={vehicle.id} className={styles.card}>
               <div className={styles.cardDetails}>
                 <img src={vehicle.primaryImage} alt={vehicle.name} />
                 <div className={styles.details}>
                   <div className={styles.name}>
-                    <h6>{vehicle.manufacture}</h6>
-                    <p>{vehicle.model}</p>
+                    <h6>{vehicle.manufacturer?.name}</h6>
+                    <p>{vehicle.model?.name}</p>
                   </div>
                   <div className={styles.price}>
                     <h6>Rs {vehicle.price}</h6>
@@ -76,4 +52,4 @@ const VehiclePage = () => {
   );
 };
 
-export default VehiclePage;
+export default HomePageAdmin;

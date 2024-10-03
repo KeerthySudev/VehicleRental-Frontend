@@ -1,0 +1,52 @@
+
+.container{
+    height: 104px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    background-color: #fafafa;
+}
+.logo{
+    height: 48px;
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+     margin-top: 28px;
+     margin-left:200px ;
+     gap: 12px;
+}
+.logo p{
+    font-family: Poppins, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #5937E0;
+}
+.menu{
+    height: 30px;
+    width: 540px;
+    display: flex;
+    flex-direction: row;
+     margin-top: 37px;
+     margin-left:186px ;
+     gap: 20px;
+}
+.menu a{
+    text-decoration: none;
+    font-family: Poppins , sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: black;
+}
+.signin button{
+    border-radius: 20px;
+    height: 40px;
+    width: 180px;
+    margin-top: 32px;
+     margin-left:186px ;
+     border: none;
+     font-family: Poppins, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    background-color: #5937E0;
+}
