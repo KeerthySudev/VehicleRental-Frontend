@@ -51,8 +51,9 @@ const Navbar = () => {
         <p>MotoRent</p>
       </div>
       <div className={styles.menu}>
-        <a href="">Home</a>
-        <a href="/">Vehicles</a>
+        <a href="/">Home</a>
+        <a href="/vehicles">Vehicles</a>
+        <a href="/booking">Bookings</a>
         <a href="/profile">Profile</a>
       </div>
       <div className={styles.signin}>

@@ -2,21 +2,18 @@
 import { ApolloProvider } from '@apollo/client';
 import client from '../../../lib/apolloClient';
 import Navbar from '../components/navbar/navbar';
-import UserHome from '../components/home/home';
-import VehiclePage from '../components/vehicles/vehicles';
+import BookingsPage from '@/modules/test/components/bookings';
 import BookingForm from '@/modules/test/components/test';
 import { ToastContainer } from 'react-toastify';
 
-const HomeView = () => {
+const BookingView = () => {
   return (
     <ApolloProvider client={client}>
       <ToastContainer/>
        <Navbar/>
-       <UserHome/>
-       <VehiclePage/>
+       <BookingsPage/>
        <BookingForm/>
    </ApolloProvider>
   );
 };
-
-export default HomeView;
+export default BookingView;

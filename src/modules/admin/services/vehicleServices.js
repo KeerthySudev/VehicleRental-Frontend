@@ -161,6 +161,22 @@ CREATE_MANUFACTURER : gql`
     }
   }
 `,
+ SEARCH_VEHICLES : gql`
+query SearchVehicles($query: String!) {
+  searchVehicles(query: $query) {
+    id
+    name
+    description
+    price
+    primaryImage
+    secondaryImage
+    availableQty
+    isRentable
+    manufacturerName
+    modelName
+  }
+}
+`,
 } 
 
 export default vehicleServices;

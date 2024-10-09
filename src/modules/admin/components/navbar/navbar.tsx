@@ -1,14 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import styles from './navbar.module.css';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const Navbar = () => {
 
     const router = useRouter();
+
+
 
     const handleLogout = () => {
         const confirmToast = () => {
@@ -50,6 +53,7 @@ const Navbar = () => {
                     <a href="/admin/vehicles">Vehicles</a>
                     <a href="/admin/manufacturers">Manufacturers</a>
             </div>
+
             <div className={styles.signin}>
                     <button onClick={handleLogout}>Sign Out</button>
             </div>

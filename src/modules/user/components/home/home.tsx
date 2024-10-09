@@ -1,66 +1,39 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMutation, gql } from "@apollo/client";
 import { useRouter } from 'next/navigation';
 import styles from './home.module.css';
 
-const LOGIN_USER = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-      user {
-        city
-        country
-        email
-        id
-        name
-        phone
-        pincode
-        state
-        role
-      }
-    }
-  }
-`;
+
 
 const UserHome  = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [login, { data, loading, error }] = useMutation(LOGIN_USER);
+  const today = new Date().toISOString().split('T')[0];
+  const [formData, setFormData] = useState({
+    pickupDate: '',
+    pickupTime: '',
+    dropoffDate: '',
+    dropoffTime: '',
+    pickupLocation: '',
+    dropoffLocation: '',
+    isDifferentDropoff: false,
+  });
 
-  const handleClick = async () => {
-    router.push("/register");
+    const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-
-    try {
-      const { data } = await login({ variables: { email, password } });
-      
-      if (data?.login) {
-        // Store the token in sessionStorage
-        sessionStorage.setItem('authToken', data.login.token);
-        
-        // Store user data in sessionStorage (optional, but can be useful)
-        sessionStorage.setItem('userData', JSON.stringify(data.login.user));
-        
-        // Check user role and redirect
-        if (data.login.user.role === 'admin') {
-          router.push('/admin');
-        } else {
-          router.push('/');
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
+    sessionStorage.setItem('formData', JSON.stringify(formData));
+    router.push("/vehicles");
   };
 
   return (
-
    <div className={styles.container}>
     <div className={styles.banner}>
 <div className={styles.content}>
@@ -70,25 +43,87 @@ const UserHome  = () => {
 </div>
 <div className={styles.form}>
 <h3>Book your wheels</h3>
-<form onSubmit={handleSubmit}>
-<div className={styles.error}> {error && <p> {error.message}</p>}</div>
-       
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
+<form>
+{/* <div className={styles.error}> {error && <p> {error.message}</p>}</div> */}
+
+         <label htmlFor="pickupDate">Pick up Time:</label>
+        <div className={styles.inputGroup}>
+       <input
+          type="date"
+          id="pickupDate"
+          name="pickupDate"
+          value={formData.pickupDate}
+          onChange={handleChange}
+          min={today}
           required
         />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+       <input
+          type="time"
+          id="pickupTime"
+          name="pickupTime"
+          value={formData.pickupTime}
+          onChange={handleChange}
           required
-        />   
-        <button type="submit" disabled={loading} className={styles.button}>
-          {loading ? "Logging in..." : "Login"}
+        />
+       </div>
+       <input
+          type="text"
+          id="pickupLocation"
+          name="pickupLocation"
+          placeholder="Pick up Location"
+          value={formData.pickupLocation}
+          onChange={handleChange}
+          required
+        />
+      
+        <label htmlFor="dropoffTime">Drop off Time:</label>
+       <div className={styles.inputGroup}>
+       <input
+          type="date"
+          id="dropoffDate"
+          name="dropoffDate"
+          value={formData.dropoffDate}
+          onChange={handleChange}
+          min={formData.pickupDate || today}
+          placeholder="Drop off Location"
+          required
+        />
+          <input
+          type="time"
+          id="dropoffTime"
+          name="dropoffTime"
+          value={formData.dropoffTime}
+          onChange={handleChange}
+          placeholder="Drop off Location"
+          required
+        />
+       </div>
+
+       <div className={styles.checkbox}>
+        <input
+          type="checkbox"
+          name="isDifferentDropoff"
+          checked={formData.isDifferentDropoff}
+          onChange={() => setFormData(prevData => ({ ...prevData, isDifferentDropoff: !prevData.isDifferentDropoff }))}
+        />
+        <p>Different drop-off location?</p>
+
+       
+      </div>
+      {formData.isDifferentDropoff &&(
+        <input
+          type="text"
+          id="dropoffLocation"
+          name="dropoffLocation"
+          placeholder="Drop off Location"
+          value={formData.dropoffLocation}
+          onChange={handleChange}
+          required
+        />
+      )}     
+
+        <button onClick={handleSubmit} className={styles.button}>
+       Book
         </button>
         
       </form>

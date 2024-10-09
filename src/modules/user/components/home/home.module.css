@@ -53,23 +53,28 @@
     margin-top: 10px;
 }
 .form{
-    height: 300px;
+    height: 460px;
     width: 416px;
     display: flex;
     flex-direction: column;
     background-color: white;
-    margin: 170px 72px;
+    margin: 100px 72px;
     border-radius: 20px;
 }
  
 .form form{
     display: flex;
     flex-direction: column;
+    width: 95%;
 }
-.form input{
+.inputGroup{
+    display: flex;
+    flex-direction: row;
+}
+.form input {
     top: 30px;
     height: 38px;
-        width: 336px;
+        width: 370px;
         margin-bottom: 12px;
          margin-left:23px ;
          background-color: #FAFAFA;
@@ -80,6 +85,49 @@
          font-size: 16px;
          position: relative;
 }
+.form label{
+    top: 30px;
+    height: 38px;
+        width: 336px;
+        margin-top: 12px;
+         margin-left:23px ;
+         color: black;
+         font-family: Poppins, sans-serif;
+         font-size: 16px;
+         position: relative;
+}
+.checkbox{
+    top: 30px;
+    height: 38px;
+        width: 336px;
+        margin-top: 12px;
+         margin-left:23px ;
+         color: black;
+         font-family: Poppins, sans-serif;
+         font-size: 16px;
+         position: relative;
+}
+/* YourForm.module.css */
+.checkbox {
+    display: flex;
+    flex-direction: row;
+    margin-top: -12px;
+  }
+  
+  
+  .checkbox input[type="checkbox"]:checked + .custom-checkbox {
+    background-color: #3399cc; /* Change background on checked */
+  }
+  
+  .checkbox input[type="checkbox"] {
+    content: '';
+    top: 7px;
+    left: -19px;
+    width: 17px;
+    background-color: white;
+    border-radius: 2px;
+  }
+  
 .form button{
         border-radius: 20px;
         height: 40px;

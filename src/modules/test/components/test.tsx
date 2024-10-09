@@ -1,151 +1,207 @@
-"use client";
+import React, { useState } from 'react';
+import { useMutation, gql } from '@apollo/client';
+import { useSearchParams } from 'next/navigation';
 
-import React, { useState } from "react";
-import { useMutation, gql } from "@apollo/client";
-
-// Define the REGISTER_CUSTOMER mutation
-const REGISTER_CUSTOMER = gql`
-  mutation RegisterCustomer($customerInput: CustomerInput!) {
-    registerCustomer(customerInput: $customerInput) {
+const CREATE_BOOKING = gql`
+  mutation CreateBooking($input: BookingInput!) {
+    createBooking(input: $input) {
       id
-      name
-      email
-      phone
+      razorpayOrderId
+      amount
+      currency
     }
   }
 `;
 
-const CustomerRegistrationForm = () => {
-  const [customerData, setCustomerData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    city: "",
-    state: "",
-    country: "",
-    pincode: "",
-    password: "",
-    confirmPassword: "",
-  });
+const UPDATE_BOOKING_PAYMENT = gql`
+  mutation UpdateBookingPayment($id: Int!, $razorpayPaymentId: String!, $razorpaySignature: String!) {
+    updateBookingPayment(id: $id, razorpayPaymentId: $razorpayPaymentId, razorpaySignature: $razorpaySignature) {
+      id
+      paymentStatus
+    }
+  }
+`;
 
-  const [registerCustomer, { data, loading, error }] = useMutation(REGISTER_CUSTOMER);
+const BookingForm = () => {
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerData({
-      ...customerData,
-      [e.target.name]: e.target.value,
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const sessionData = sessionStorage.getItem("userData");
+  const user = sessionData ? JSON.parse(sessionData) : null;
+  const searchParams = useSearchParams();
+  const vehicleId = searchParams.get('id'); 
+  const price = searchParams.get('price'); 
+  const today = new Date().toISOString().split('T')[0];
 
+
+  const [formData, setFormData] = useState({
+    pickupDate: '',
+    pickupTime: '',
+    dropoffDate: '',
+    dropoffTime: '',
+    pickupLocation: '',
+    dropoffLocation: '',
+    amount: 0,
+  });
+
+  const pickupDate = new Date(formData.pickupDate);
+  const dropoffDate = new Date(formData.dropoffDate);
+  const noOfDays = dropoffDate.getDate() - pickupDate.getDate() +1;
+  const amount = noOfDays * Number(price);
+  const [createBooking] = useMutation(CREATE_BOOKING);
+  const [updateBookingPayment] = useMutation(UPDATE_BOOKING_PAYMENT);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+loadRazorpayScript();
+    const input = {
+      pickupDate: formData.pickupDate,
+      pickupTime: formData.pickupTime,
+      dropoffDate: formData.dropoffDate,
+      dropoffTime: formData.dropoffTime,
+      pickupLocation: formData.pickupLocation,
+      dropoffLocation: formData.dropoffLocation,
+      amount: parseFloat(2),
+      vehicleId: parseInt(14),
+      customerId: parseInt(user.id),
+    };
+console.log(input);
     try {
-      await registerCustomer({
-        variables: {
-          customerInput: { ...customerData },
-        },
-      });
-      setCustomerData({
-        name: "",
-        email: "",
-        phone: "",
-        city: "",
-        state: "",
-        country: "",
-        pincode: "",
-        password: "",
-        confirmPassword: "",
-      });
-    } catch (err) {
-      console.error(err);
+      const { data } = await createBooking({ variables: { input } });
+
+      if (data.createBooking) {
+        const { razorpayOrderId, amount, currency } = data.createBooking;
+
+        const options = {
+          key: process.env.RAZORPAY_KEY_ID,
+          amount: amount * 100, // amount in paise
+          currency: currency,
+          name: 'Vehicle Booking',
+          description: 'Complete your payment',
+          order_id: razorpayOrderId,
+          handler: function (response) {
+            sessionStorage.removeItem('formData');
+
+            updateBookingPayment({
+              variables: {
+                id: data.createBooking.id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+              },
+            }).then(() => {
+              alert('Payment successful and booking updated!');
+            });
+          },
+          prefill: {
+            name: 'Keerthy Sudev',
+            email: 'keerthysudev33@gmail.com',
+            contact: '9999999999',
+          },
+          theme: {
+            color: '#3399cc',
+          },
+        };
+        const rzp1 = new (window as any).Razorpay(options);
+        rzp1.open();
+      }
+    } catch (error) {
+      console.error('Error creating booking or initiating payment:', error);
     }
   };
 
   return (
-    <div>
-      <h2>Customer Registration</h2>
-      <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="pickupDate">Pickup Date:</label>
+        <input
+          type="date"
+          id="pickupDate"
+          name="pickupDate"
+          value={formData.pickupDate}
+          onChange={handleChange}
+          min={today}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="pickupTime">Pickup Time:</label>
+        <input
+          type="time"
+          id="pickupTime"
+          name="pickupTime"
+          value={formData.pickupTime}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="dropoffDate">Dropoff Date:</label>
+        <input
+          type="date"
+          id="dropoffDate"
+          name="dropoffDate"
+          value={formData.dropoffDate}
+          onChange={handleChange}
+          min={formData.pickupDate || today}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="dropoffTime">Dropoff Time:</label>
+        <input
+          type="time"
+          id="dropoffTime"
+          name="dropoffTime"
+          value={formData.dropoffTime}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="pickupLocation">Pickup Location:</label>
         <input
           type="text"
-          name="name"
-          value={customerData.name}
+          id="pickupLocation"
+          name="pickupLocation"
+          value={formData.pickupLocation}
           onChange={handleChange}
-          placeholder="Name"
           required
         />
-        <input
-          type="email"
-          name="email"
-          value={customerData.email}
-          onChange={handleChange}
-          placeholder="Email"
-          required
-        />
+      </div>
+      <div>
+        <label htmlFor="dropoffLocation">Dropoff Location:</label>
         <input
           type="text"
-          name="phone"
-          value={customerData.phone}
+          id="dropoffLocation"
+          name="dropoffLocation"
+          value={formData.dropoffLocation}
           onChange={handleChange}
-          placeholder="Phone"
           required
         />
-        <input
-          type="text"
-          name="city"
-          value={customerData.city}
-          onChange={handleChange}
-          placeholder="City"
-          required
-        />
-        <input
-          type="text"
-          name="state"
-          value={customerData.state}
-          onChange={handleChange}
-          placeholder="State"
-          required
-        />
-        <input
-          type="text"
-          name="country"
-          value={customerData.country}
-          onChange={handleChange}
-          placeholder="Country"
-          required
-        />
-        <input
-          type="text"
-          name="pincode"
-          value={customerData.pincode}
-          onChange={handleChange}
-          placeholder="Pincode"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          value={customerData.password}
-          onChange={handleChange}
-          placeholder="Password"
-          required
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          value={customerData.confirmPassword}
-          onChange={handleChange}
-          placeholder="Confirm Password"
-          required
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </button>
-        {error && <p style={{ color: "red" }}>Error: {error.message}</p>}
-        {data && <p style={{ color: "green" }}>Registration Successful</p>}
-      </form>
-    </div>
+      </div>
+      <button type="submit">Create Booking</button>
+    </form>
   );
 };
 
-export default CustomerRegistrationForm;
+export default BookingForm;

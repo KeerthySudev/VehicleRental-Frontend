@@ -74,6 +74,7 @@ const ProfilePage = () => {
             imageFile : imageFile,
           },
         });
+        setImageFile(null);
         refetch();
           toast.success("Profile updated!", {
             position: "top-right",

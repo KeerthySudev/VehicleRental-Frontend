@@ -4,7 +4,6 @@ import React,{useState} from "react";
 import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEdit,
   faTrash,
   faEye,
   faPlus,
@@ -215,9 +214,6 @@ const ManufacturersPage = () => {
                 </div>
               </div>
               <div className={styles.buttons}>
-                <button className={styles.edit}>
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
                 <button onClick={() => handleDelete(manufacturer.id)} className={styles.delete}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>

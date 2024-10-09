@@ -2,8 +2,10 @@ export interface Vehicle {
     id: number;
     name: string;
     model: Model;
+    modelName: string;
     description: string;
     manufacturer: Manufacturer;
+    manufacturerName: string;
     price: number;
     availableQty: number;
     primaryImage: string;

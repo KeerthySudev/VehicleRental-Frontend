@@ -68,6 +68,22 @@ query GetAllVehicles {
   }
 }
 `,
+SEARCH_VEHICLES : gql`
+query SearchRentableVehicles($query: String!) {
+  searchRentableVehicles(query: $query) {
+    id
+    name
+    description
+    price
+    primaryImage
+    secondaryImage
+    availableQty
+    isRentable
+    manufacturerName
+    modelName
+  }
+}
+`,
 } 
 
 export default vehicleServices;
