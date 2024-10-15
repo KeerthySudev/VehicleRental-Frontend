@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Navbar = () => {
   const router = useRouter();
-  const sessionData = sessionStorage.getItem("userData");
+  const sessionData = sessionStorage?.getItem("userData");
   const user = sessionData ? JSON.parse(sessionData) : null;
 
   const handleClick = async () => {
@@ -51,10 +51,19 @@ const Navbar = () => {
         <p>MotoRent</p>
       </div>
       <div className={styles.menu}>
-        <a href="/">Home</a>
-        <a href="/vehicles">Vehicles</a>
-        <a href="/booking">Bookings</a>
-        <a href="/profile">Profile</a>
+        {user ? (
+          <>
+            <a href="/">Home</a>
+            <a href="/vehicles">Vehicles</a>
+            <a href="/booking">Bookings</a>
+            <a href="/profile">Profile</a>
+          </>
+        ) : (
+          <>
+            <a href="/">Home</a>
+            <a href="/vehicles">Vehicles</a>
+          </>
+        )}
       </div>
       <div className={styles.signin}>
         {user ? (

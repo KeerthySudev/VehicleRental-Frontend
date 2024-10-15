@@ -161,6 +161,14 @@ CREATE_MANUFACTURER : gql`
     }
   }
 `,
+
+IMPORT_MANUFACTURERS : gql`
+  mutation ImportManufacturers($file: Upload) {
+    importManufacturers(file: $file)
+  }
+`,
+
+
  SEARCH_VEHICLES : gql`
 query SearchVehicles($query: String!) {
   searchVehicles(query: $query) {
@@ -177,6 +185,18 @@ query SearchVehicles($query: String!) {
   }
 }
 `,
+
+UPDATE_VEHICLE : gql`
+mutation UpdateVehicle($id: Int!, $data: VehicleInput, $primaryImageFile: Upload , $secondaryImageFile: Upload) {
+    updateVehicle(id: $id, data: $data, primaryImageFile: $primaryImageFile, secondaryImageFile: $secondaryImageFile) {
+      id
+      name
+      description
+      price
+      availableQty
+    }
+  }`
+
 } 
 
 export default vehicleServices;

@@ -100,24 +100,16 @@
     top: 30px;
     height: 38px;
         width: 336px;
-        margin-top: 12px;
+        margin-top: -12px;
          margin-left:23px ;
          color: black;
          font-family: Poppins, sans-serif;
          font-size: 16px;
          position: relative;
+         display: flex;
+         flex-direction: row;
 }
-/* YourForm.module.css */
-.checkbox {
-    display: flex;
-    flex-direction: row;
-    margin-top: -12px;
-  }
   
-  
-  .checkbox input[type="checkbox"]:checked + .custom-checkbox {
-    background-color: #3399cc; /* Change background on checked */
-  }
   
   .checkbox input[type="checkbox"] {
     content: '';

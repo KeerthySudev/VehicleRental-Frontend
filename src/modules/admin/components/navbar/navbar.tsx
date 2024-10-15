@@ -52,6 +52,7 @@ const Navbar = () => {
                     <a href="/admin">Home</a>
                     <a href="/admin/vehicles">Vehicles</a>
                     <a href="/admin/manufacturers">Manufacturers</a>
+                    <a href="/admin/allBookings">Bookings</a>
             </div>
 
             <div className={styles.signin}>

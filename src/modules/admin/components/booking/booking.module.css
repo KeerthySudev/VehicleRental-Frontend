@@ -1,0 +1,168 @@
+
+  .exportButton button{
+    border-radius: 12px;
+    height: 40px;
+    width: 200px;
+    position: relative;
+    left: -630px;
+    border: none;
+    color: white;
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+    background-color: #6853bd;
+}
+
+.exportButtons button{
+  border-radius: 12px;
+  height: 40px;
+  width: 150px;
+  position: relative;
+  border: none;
+  color: white;
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+  background-color: #6853bd;
+}
+  
+  
+.bookingContainer {
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Button styles */
+.exportButtons button {
+  border-radius: 12px;
+  height: 40px;
+  width: 150px;
+  border: none;
+  color: white;
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+  background-color: #6853bd;
+  transition: background-color 0.3s ease;
+}
+
+.exportButtons button:hover {
+  background-color: #5a44a1; /* Darker shade on hover */
+}
+
+/* Booking card styles */
+.bookingCardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.bookingCard {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  padding: 20px;
+  font-family: Poppins, sans-serif;
+  display: flex;
+  justify-content: space-between; /* Align pickup and dropoff sections */
+}
+
+.bookingCard:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Card details */
+.bookingCardDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 45%; /* Width to make space for two sides */
+}
+
+/* New styling for pickup and dropoff */
+.bookingPickupDropoff {
+  display: flex;
+  justify-content: space-between; /* Space between pickup and dropoff */
+  width: 100%; /* Ensure it takes full width */
+}
+
+.bookingPickup, .bookingDropoff {
+  flex: 1; /* Equal width for pickup and dropoff sections */
+  padding: 10px; /* Add some padding */
+}
+
+.bookingInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Vehicle name */
+.bookingVehicleName {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+}
+
+/* Location and Date/Time styles */
+.bookingLocation {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.bookingDateTime {
+  font-size: 14px;
+  color: #444;
+  margin: 0;
+}
+
+.bookingStatus {
+  font-size: 14px;
+  color: #e67e22; /* You can change this to a different color if needed */
+}
+
+.bookingAmount {
+  font-size: 16px;
+  font-weight: bold;
+  color: #27ae60; /* Change as per your design */
+}
+/* Label styles */
+.bookingLabel {
+  font-weight: bold; /* Make labels bold */
+  font-size: 14px; /* Set a standard font size */
+  color: #333; /* Darker color for labels */
+}
+
+/* Location and Date/Time styles */
+.bookingLocation {
+  font-size: 14px;
+  color: #666; /* Light color for location */
+  margin: 0;
+}
+
+.bookingDateTime {
+  font-size: 14px;
+  color: #444; /* Medium color for date/time */
+  margin: 0;
+}
+.bookingAmountRow{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.rentButton{
+  border-radius: 12px;
+  height: 40px;
+  width: 120px;
+  position: relative;
+  border: none;
+  color: white;
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+  background-color: #e67e22;
+}

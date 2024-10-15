@@ -19,6 +19,7 @@ import {  Manufacturer, Model } from "../../../../app/types/vehicleType";
 
 const ManufacturersPage = () => {
   const [modelName, setModelName] = useState('');
+  const  [checked, setChecked] = useState(false);
   const [createModel] = useMutation(vehicleServices.CREATE_MODEL);
   const [showForm, setShowForm] = useState<number | null>(null);
   const { data, loading, error, refetch } = useQuery(vehicleServices.GET_ALL_MANUFACTURERS);
@@ -27,6 +28,7 @@ const ManufacturersPage = () => {
   const [deleteManufacturer] = useMutation(vehicleServices.DELETE_MANUFACTURER);
   const [deleteModel] = useMutation(vehicleServices.DELETE_MODEL);
   const [name, setName] = useState('');
+  const [file, setFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [createManufacturer] = useMutation(vehicleServices.CREATE_MANUFACTURER, {
@@ -35,8 +37,8 @@ const ManufacturersPage = () => {
       setImageFile(null);
     },
   });
-
-
+  const [importManufacturers] = useMutation(vehicleServices.IMPORT_MANUFACTURERS)
+console.log(data);
   const handleFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (imageFile) {
@@ -50,6 +52,27 @@ const ManufacturersPage = () => {
         setShowModal(false);
         refetch();
         toast.success("Manufacturer Added!", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+        console.log("Mutation result:", result);
+      
+    }
+  };
+
+
+  const handleImport = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    if (file) {
+      
+        const result = await importManufacturers({
+          variables: {
+            file,
+          },
+        });
+        refetch();
+        setShowModal(false);
+        toast.success("Manufacturers Added!", {
           position: "top-right",
           autoClose: 2000,
         });
@@ -156,12 +179,16 @@ const ManufacturersPage = () => {
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error fetching..: {error.message}</p>;
 
+
+
   return (
     <div className={styles.vehicleContainer}>
         {showModal && (
         <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+
             <h2>Add Manufacturer</h2>
+           
             <form>
               <div>
                 <input
@@ -194,6 +221,37 @@ const ManufacturersPage = () => {
                 Cancel
               </button>
             </form>
+            <div className={styles.checkbox}>
+        <input
+          type="checkbox"
+          name="isDifferentDropoff"
+          checked={checked}
+          onChange={() => setChecked(!checked)}
+        />
+        <p>Import manufacturers?</p>
+        </div>
+       {checked && (
+ <form onSubmit={(e) => handleImport(e)}  className={styles.importForm}>
+ <div>
+   <input
+     type="file"
+     onChange={(e) => {
+       if (e.target.files?.[0]) {
+         setFile(e.target.files[0]);
+       } else {
+         setFile(null);
+       }
+     }}
+     required
+   />
+ </div>
+ <button type="submit" className={styles.importButton}>
+   Import
+ </button>
+
+</form>
+       )}
+
           </div>
         </div>
       )}

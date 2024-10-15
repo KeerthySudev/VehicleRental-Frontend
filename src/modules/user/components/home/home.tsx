@@ -43,7 +43,7 @@ const UserHome  = () => {
 </div>
 <div className={styles.form}>
 <h3>Book your wheels</h3>
-<form>
+<form onSubmit={handleSubmit}>
 {/* <div className={styles.error}> {error && <p> {error.message}</p>}</div> */}
 
          <label htmlFor="pickupDate">Pick up Time:</label>
@@ -122,7 +122,7 @@ const UserHome  = () => {
         />
       )}     
 
-        <button onClick={handleSubmit} className={styles.button}>
+        <button type="submit"  className={styles.button}>
        Book
         </button>
         

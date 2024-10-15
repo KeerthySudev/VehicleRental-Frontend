@@ -10,13 +10,10 @@ const Navbar = () => {
                 <img src="/images/logo.svg" alt="logo" />
                 <p>MotoRent</p>
             </div>
-            {/* <div className={styles.menu}>
-                    <a href="">Home</a>
-                    <a href="">Vehicles</a>
+            <div className={styles.menu}>
+            <a href="/">Home</a>
+            <a href="/vehicles">Vehicles</a>
             </div>
-            <div className={styles.signin}>
-                    <button>Sign In</button>
-            </div> */}
         </div>
     )
 }

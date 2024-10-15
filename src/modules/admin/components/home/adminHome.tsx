@@ -16,12 +16,19 @@ const HomePageAdmin = () => {
       `http://localhost:3000/vehicle?id=${encodeURIComponent(vehicleId)}`
     );
   };
+  const handleViewClick = () => {
+    router.push(
+      `/admin/vehicles`
+    );
+  };
+
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error fetching..: {error.message}</p>;
   return (
     <div className={styles.vehicleContainer}>
       <div className={styles.title}>
-        <h2>Available cars..</h2>
+        <h2>Rentable cars..</h2>
+        <button onClick={handleViewClick}>View all cars</button>
         {/* <a href="">View All</a> */}
       </div>
       {data && (
@@ -41,9 +48,9 @@ const HomePageAdmin = () => {
                   </div>
                 </div>
               </div>
-              <button onClick={() => handleClick(vehicle.id)}>
+              {/* <button onClick={() => handleClick(vehicle.id)}>
                 View Details
-              </button>
+              </button> */}
             </div>
           ))}
         </div>

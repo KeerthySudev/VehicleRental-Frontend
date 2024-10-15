@@ -2,8 +2,7 @@
 import { ApolloProvider } from '@apollo/client';
 import client from '../../../lib/apolloClient';
 import Navbar from '../components/navbar/navbar';
-import BookingsPage from '@/modules/test/components/bookings';
-import BookingForm from '@/modules/test/components/test';
+import BookingsPage from '../components/booking/booking';
 import { ToastContainer } from 'react-toastify';
 
 const BookingView = () => {
@@ -12,7 +11,6 @@ const BookingView = () => {
       <ToastContainer/>
        <Navbar/>
        <BookingsPage/>
-       <BookingForm/>
    </ApolloProvider>
   );
 };

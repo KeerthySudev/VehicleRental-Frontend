@@ -1,74 +1,76 @@
-/* Main booking container */
-.bookingContainer {
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  /* Booking card styles */
-  .bookingCardContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-  }
-  
-  .bookingCard {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-    padding: 20px;
-  }
-  
-  .bookingCard:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* Card details */
-  .bookingCardDetails {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .bookingInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  /* Vehicle name */
-  .bookingVehicleName {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-    color: #333;
-  }
-  
-  /* Location and Date/Time styles */
-  .bookingLocation {
-    font-size: 14px;
-    color: #666;
-    margin: 0;
-  }
-  
-  .bookingDateTime {
-    font-size: 14px;
-    color: #444;
-    margin: 0;
-  }
-  
-  .bookingStatus {
-    font-size: 14px;
-    color: #e67e22; /* You can change this to a different color if needed */
-  }
-  
-  .bookingAmount {
-    font-size: 16px;
-    font-weight: bold;
-    color: #27ae60; /* Change as per your design */
-  }
-  
+/* Footer Styles */
+.footer {
+  background-color: #f0f0f0;
+  padding: 20px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Poppins, sans-serif;
+}
+
+.footerContent {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.footerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footerSection h4 {
+  font-weight: bold;
+  color: #5937E0;
+}
+
+.footerSection ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footerSection ul li {
+  margin-bottom: 8px;
+}
+
+.footerSection ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.footerSection p {
+  font-size: 17px;
+  color: #666;
+}
+
+.footerBottom {
+  margin-top: 20px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+.footerBottom p {
+  margin: 0;
+}
+
+/* Logo and Brand Name Styling */
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footerLogo {
+  width: 50px; /* Adjust the width as needed */
+}
+
+.brandName {
+  font-weight: bold;
+  font-size: 18px;
+  color: #5937E0;
+  margin: 0;
+}

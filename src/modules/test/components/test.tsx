@@ -1,207 +1,120 @@
-import React, { useState } from 'react';
-import { useMutation, gql } from '@apollo/client';
-import { useSearchParams } from 'next/navigation';
+"use client";
 
-const CREATE_BOOKING = gql`
-  mutation CreateBooking($input: BookingInput!) {
-    createBooking(input: $input) {
-      id
-      razorpayOrderId
-      amount
-      currency
-    }
-  }
-`;
+import React,{useState} from "react";
+import { useQuery } from "@apollo/client";
+import { useRouter } from "next/navigation";
+import styles from "./vehicles.module.css";
+import vehicleServices from "../../services/vehicleServices";
+import { Vehicle } from "../../../../app/types/vehicleType";
 
-const UPDATE_BOOKING_PAYMENT = gql`
-  mutation UpdateBookingPayment($id: Int!, $razorpayPaymentId: String!, $razorpaySignature: String!) {
-    updateBookingPayment(id: $id, razorpayPaymentId: $razorpayPaymentId, razorpaySignature: $razorpaySignature) {
-      id
-      paymentStatus
-    }
-  }
-`;
-
-const BookingForm = () => {
-
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => {
-        resolve(true);
-      };
-      script.onerror = () => {
-        resolve(false);
-      };
-      document.body.appendChild(script);
-    });
-  };
-
-  const sessionData = sessionStorage.getItem("userData");
-  const user = sessionData ? JSON.parse(sessionData) : null;
-  const searchParams = useSearchParams();
-  const vehicleId = searchParams.get('id'); 
-  const price = searchParams.get('price'); 
-  const today = new Date().toISOString().split('T')[0];
-
-
-  const [formData, setFormData] = useState({
-    pickupDate: '',
-    pickupTime: '',
-    dropoffDate: '',
-    dropoffTime: '',
-    pickupLocation: '',
-    dropoffLocation: '',
-    amount: 0,
+const VehiclePage = () => {
+  const router = useRouter();
+  const [query, setQuery] = useState('');
+  const { data, loading, error } = useQuery(vehicleServices.GET_ALL_RENTABLE_VEHICLES);
+  const { data:searchData, loading:searchLoading, error:searchError } = useQuery(vehicleServices.SEARCH_VEHICLES, {
+    variables: { query: query   }, 
+    skip: !query,  
   });
+  
+  const handleClick = (vehicleId: any) => {
+    router.push(
+      `/vehicle?id=${encodeURIComponent(vehicleId)}`
+    );
+  };
+  if (loading) return <p>Loading ...</p>;
+  if (error) return <p>Error fetching..: {error.message}</p>;
 
-  const pickupDate = new Date(formData.pickupDate);
-  const dropoffDate = new Date(formData.dropoffDate);
-  const noOfDays = dropoffDate.getDate() - pickupDate.getDate() +1;
-  const amount = noOfDays * Number(price);
-  const [createBooking] = useMutation(CREATE_BOOKING);
-  const [updateBookingPayment] = useMutation(UPDATE_BOOKING_PAYMENT);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleInputChange = (e) => {
+    setQuery(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-loadRazorpayScript();
-    const input = {
-      pickupDate: formData.pickupDate,
-      pickupTime: formData.pickupTime,
-      dropoffDate: formData.dropoffDate,
-      dropoffTime: formData.dropoffTime,
-      pickupLocation: formData.pickupLocation,
-      dropoffLocation: formData.dropoffLocation,
-      amount: parseFloat(2),
-      vehicleId: parseInt(14),
-      customerId: parseInt(user.id),
-    };
-console.log(input);
-    try {
-      const { data } = await createBooking({ variables: { input } });
+  const vehicles = query 
+  ? searchData?.searchRentableVehicles|| []
+  : data?.getAllRentableVehicles || [];
 
-      if (data.createBooking) {
-        const { razorpayOrderId, amount, currency } = data.createBooking;
+ 
 
-        const options = {
-          key: process.env.RAZORPAY_KEY_ID,
-          amount: amount * 100, // amount in paise
-          currency: currency,
-          name: 'Vehicle Booking',
-          description: 'Complete your payment',
-          order_id: razorpayOrderId,
-          handler: function (response) {
-            sessionStorage.removeItem('formData');
+const renderVehicles = () => {
+  if (searchLoading || loading) return <p>Loading...</p>;
+  if (searchError) return <p>Error: {searchError.message}</p>;
+  if (error) return <p>Error fetching: {error.message}</p>;
 
-            updateBookingPayment({
-              variables: {
-                id: data.createBooking.id,
-                razorpayPaymentId: response.razorpay_payment_id,
-                razorpaySignature: response.razorpay_signature,
-              },
-            }).then(() => {
-              alert('Payment successful and booking updated!');
-            });
-          },
-          prefill: {
-            name: 'Keerthy Sudev',
-            email: 'keerthysudev33@gmail.com',
-            contact: '9999999999',
-          },
-          theme: {
-            color: '#3399cc',
-          },
-        };
-        const rzp1 = new (window as any).Razorpay(options);
-        rzp1.open();
-      }
-    } catch (error) {
-      console.error('Error creating booking or initiating payment:', error);
-    }
-  };
+  if (vehicles.length === 0) {
+    return <p>No vehicles found.</p>;
+  }
+
+  return vehicles.map((vehicle: Vehicle) => (
+    <div key={vehicle.id} className={styles.card}>
+      <div className={styles.cardDetails}>
+        <img src={vehicle.primaryImage} alt={vehicle.name} />
+        <div className={styles.details}>
+          <div className={styles.name}>
+          <h6>{vehicle.manufacturer?.name || vehicle.manufacturerName}</h6>
+              <p>{vehicle.model?.name || vehicle.modelName}</p>
+          </div>
+          <div className={styles.price}>
+            <h6>Rs {vehicle.price}</h6>
+            <p>per day</p>
+          </div>
+        </div>
+      </div>
+      <button onClick={() => handleClick(vehicle.id)}>
+        View Details
+      </button>
+    </div>
+  ))
+};
+
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="pickupDate">Pickup Date:</label>
-        <input
-          type="date"
-          id="pickupDate"
-          name="pickupDate"
-          value={formData.pickupDate}
-          onChange={handleChange}
-          min={today}
-          required
-        />
+    <div className={styles.vehicleContainer}>
+      <div className={styles.title}>
+        <h2>Choose the car that suits you</h2>
       </div>
-      <div>
-        <label htmlFor="pickupTime">Pickup Time:</label>
-        <input
-          type="time"
-          id="pickupTime"
-          name="pickupTime"
-          value={formData.pickupTime}
-          onChange={handleChange}
-          required
-        />
+      <div className={styles.search}>
+      <input
+        type="text"
+        value={query}
+        onChange={handleInputChange}
+        placeholder="Search..."
+      />
       </div>
-      <div>
-        <label htmlFor="dropoffDate">Dropoff Date:</label>
-        <input
-          type="date"
-          id="dropoffDate"
-          name="dropoffDate"
-          value={formData.dropoffDate}
-          onChange={handleChange}
-          min={formData.pickupDate || today}
-          required
-        />
+      {data && (
+        <div className={styles.cardContainer}>
+          {renderVehicles()}
+          {/* {data.getAllRentableVehicles.map((vehicle: Vehicle) => (
+    <div key={vehicle.id} className={styles.card}>
+      <div className={styles.cardDetails}>
+        <img src={vehicle.primaryImage} alt={vehicle.name} />
+        <div className={styles.details}>
+          <div className={styles.name}>
+          <h6>{vehicle.manufacturer?.name || vehicle.manufacturerName}</h6>
+              <p>{vehicle.model?.name || vehicle.modelName}</p>
+          </div>
+          <div className={styles.price}>
+            <h6>Rs {vehicle.price}</h6>
+            <p>per day</p>
+          </div>
+        </div>
       </div>
-      <div>
-        <label htmlFor="dropoffTime">Dropoff Time:</label>
-        <input
-          type="time"
-          id="dropoffTime"
-          name="dropoffTime"
-          value={formData.dropoffTime}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="pickupLocation">Pickup Location:</label>
-        <input
-          type="text"
-          id="pickupLocation"
-          name="pickupLocation"
-          value={formData.pickupLocation}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="dropoffLocation">Dropoff Location:</label>
-        <input
-          type="text"
-          id="dropoffLocation"
-          name="dropoffLocation"
-          value={formData.dropoffLocation}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <button type="submit">Create Booking</button>
-    </form>
+      <button onClick={() => handleClick(vehicle.id)}>
+        View Details
+      </button>
+    </div>
+  ))} */}
+
+
+
+
+
+
+
+          
+        </div>
+      )}
+    </div>
   );
 };
 
-export default BookingForm;
+export default VehiclePage;

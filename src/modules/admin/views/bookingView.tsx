@@ -3,15 +3,15 @@ import { ApolloProvider } from "@apollo/client";
 import client from "../../../lib/apolloClient";
 import Navbar from "../components/navbar/navbar";
 import { ToastContainer } from "react-toastify";
-import VehiclePageAdmin from "../components/vehicles/vehicles";
+import BookingsPage from "../components/booking/booking";
 
-const VehicleView = () => {
+const BookingView = () => {
   return (
     <ApolloProvider client={client}>
       <Navbar />
-      <VehiclePageAdmin />
+      <BookingsPage />
       <ToastContainer />
     </ApolloProvider>
   );
 };
-export default VehicleView;
+export default BookingView;
