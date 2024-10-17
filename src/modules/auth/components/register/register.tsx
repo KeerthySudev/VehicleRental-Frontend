@@ -1,46 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useRouter } from 'next/navigation';
 import styles from './register.module.css';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
-const VALIDATE_CUSTOMER = gql`
-  mutation ValidateCustomer($customerInput: CustomerInput!) {
-    validateCustomer(customerInput: $customerInput) 
-  }
-`;
-
-const REGISTER_CUSTOMER = gql`
-  mutation RegisterCustomer($customerInput: CustomerInput!) {
-    registerCustomer(customerInput: $customerInput) {
-      id
-      name
-      email
-      phone
-    }
-  }
-`;
-const SEND_VERIFICATION = gql`
-  mutation sendVerification($phoneNumber: String!) {
-    sendVerification(phoneNumber: $phoneNumber)
-  }
-`;
-
-const VERIFY_CODE = gql`
-  mutation verifyCode($phoneNumber: String!, $code: String!) {
-    verifyCode(phoneNumber: $phoneNumber, code: $code)
-  }
-`;
+import authServices from "../../services/authServices";
 
 const RegistrationForm = () => {
   const router = useRouter();
-   const [sendVerification] = useMutation(SEND_VERIFICATION);
+   const [sendVerification] = useMutation(authServices.SEND_VERIFICATION);
    const [showModal, setShowModal] = useState(false);
-  const [verifyCode] = useMutation(VERIFY_CODE);
+  const [verifyCode] = useMutation(authServices.VERIFY_CODE);
   const phoneNumber = '+916282571196';
   const [code, setCode] = useState('');
   const [customerData, setCustomerData] = useState({
@@ -55,8 +27,8 @@ const RegistrationForm = () => {
     confirmPassword: "",
   });
 
-  const [validateCustomer , { data, loading, error }] = useMutation(VALIDATE_CUSTOMER);
-  const [registerCustomer] = useMutation(REGISTER_CUSTOMER);
+  const [validateCustomer , { data, loading, error }] = useMutation(authServices.VALIDATE_CUSTOMER);
+  const [registerCustomer] = useMutation(authServices.REGISTER_CUSTOMER);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomerData({

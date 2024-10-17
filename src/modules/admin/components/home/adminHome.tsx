@@ -11,14 +11,15 @@ const HomePageAdmin = () => {
   const router = useRouter();
   const { data, loading, error } = useQuery(vehicleServices.GET_ALL_RENTABLE_VEHICLES);
 
-  const handleClick = (vehicleId: any) => {
-    router.push(
-      `http://localhost:3000/vehicle?id=${encodeURIComponent(vehicleId)}`
-    );
-  };
   const handleViewClick = () => {
     router.push(
       `/admin/vehicles`
+    );
+  };
+
+  const handleClick = (vehicleId: any) => {
+    router.push(
+      `admin/vehicle?id=${encodeURIComponent(vehicleId)}`
     );
   };
 

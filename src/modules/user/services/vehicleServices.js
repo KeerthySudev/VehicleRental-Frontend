@@ -84,6 +84,22 @@ query SearchRentableVehicles($query: String!) {
   }
 }
 `,
+GET_ALL_RENTABLE_VEHICLES_SORTED : gql`
+query GetAllRentableVehiclesSorted($sortOrder: String!) {
+  getAllRentableVehiclesSorted(sortOrder: $sortOrder) {
+    id
+    name
+    description
+    price
+    primaryImage
+    secondaryImage
+    availableQty
+    isRentable
+    manufacturerName
+    modelName
+  }
+}
+`,
 } 
 
 export default vehicleServices;

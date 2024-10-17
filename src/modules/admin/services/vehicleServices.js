@@ -168,6 +168,12 @@ IMPORT_MANUFACTURERS : gql`
   }
 `,
 
+IMPORT_VEHICLES : gql`
+  mutation ImportVehicles($file: Upload) {
+    importVehicles(file: $file)
+  }
+`,
+
 
  SEARCH_VEHICLES : gql`
 query SearchVehicles($query: String!) {

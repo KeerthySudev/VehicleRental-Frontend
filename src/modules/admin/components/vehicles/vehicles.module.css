@@ -4,6 +4,49 @@
     display: flex;
     flex-direction: column;
 }
+
+
+.importForm{
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .checkbox{
+    height: 38px;
+        width: 336px;
+        margin-bottom: 12px;
+         color: white;
+         font-family: Poppins, sans-serif;
+         font-size: 16px;
+         position: relative;
+         display: flex;
+         flex-direction: row;
+         gap: 5px;
+  }
+  
+  .importButton {
+    height: 50px;
+    width: 90px;
+    background-color: #c0392b;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-family: Poppins , sans-serif;
+    font-weight: 10px;
+    font-size: 16px;
+    }
+  .checkbox input[type="checkbox"] {
+    content: '';
+    top: 7px;
+    position: relative;
+    width: 17px;
+    background-color: white;
+    border-radius: 2px;
+  }
+
 .title{
     height: 118px;
     width: 1096px;

@@ -1,34 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useRouter } from 'next/navigation';
 import styles from './login.module.css';
+import authServices from "../../services/authServices";
 
-const LOGIN_USER = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-      user {
-        city
-        country
-        email
-        id
-        name
-        phone
-        pincode
-        state
-        role
-      }
-    }
-  }
-`;
 
 const LoginForm  = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [login, { data, loading, error }] = useMutation(LOGIN_USER);
+  const [login, { data, loading, error }] = useMutation(authServices.LOGIN_USER);
 
   const handleClick = async () => {
     router.push("/register");

@@ -13,16 +13,33 @@
     width: 450px;
     display: flex;
     flex-direction: column;
-    margin-top: 60px;
     margin-left:72px ;
     gap: 20px;
+}
+
+.showForm{
+    display: flex;
+    flex-direction: column;
+}
+
+.showFormButton{
+    background-color: #FF9E0C;
+    border-radius: 12px;
+    height: 40px;
+    width: 205px;
+     border: none;
+     font-family: Poppins , sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    margin-top: 10px;
 }
 .specification{
     height: 740px;
     width: 636px;
     display: flex;
     flex-direction: column;
-    margin-top:160px;
+    margin-top:100px;
 }
 .vehicleDetails{
     height: 437px;
@@ -47,7 +64,7 @@
     height: fit-content;
   }
 
-.modalContent input  {
+.modalContent input, .showForm input  {
     width: 90%;
     padding: 8px;
     margin: 10px 0;
@@ -55,6 +72,9 @@
     border-radius: 4px;
   }
 
+  .showForm input{
+    width: 85%;
+  }
 .vehicleDetails img{
     height: 303px;
     position: relative;
@@ -107,14 +127,27 @@
     color: #5937E0;
 }
 
-.vehicleDetails button{
+.modalContent button{
     border-radius: 12px;
-    height: 80px;
-    width: 305px;
+    height: 40px;
+    width: 205px;
      border: none;
      font-family: Poppins , sans-serif;
     font-weight: bold;
     font-size: 16px;
     color: white;
     background-color: #5937E0;
+    margin-top: 10px;
+}
+.vehicleDetailsButton{
+    height: 100px;
+    width: 305px;
+    border-radius: 12px;
+     border: none;
+     font-family: Poppins , sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    background-color: #5937E0;
+    margin-top: 10px;
 }

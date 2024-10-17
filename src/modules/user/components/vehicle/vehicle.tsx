@@ -1,48 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./vehicle.module.css";
+import bookingServices from "../../services/bookingServices";
 import vehicleServices from "../../services/vehicleServices";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const CREATE_BOOKING = gql`
-  mutation CreateBooking($input: BookingInput!) {
-    createBooking(input: $input) {
-      id
-      razorpayOrderId
-      amount
-      currency
-    }
-  }
-`;
-
-const UPDATE_BOOKING_PAYMENT = gql`
-  mutation UpdateBookingPayment(
-    $id: Int!
-    $razorpayPaymentId: String!
-    $razorpaySignature: String!
-  ) {
-    updateBookingPayment(
-      id: $id
-      razorpayPaymentId: $razorpayPaymentId
-      razorpaySignature: $razorpaySignature
-    ) {
-      id
-      paymentStatus
-    }
-  }
-`;
-
-const DELETE_BOOKING = gql`
-  mutation DeleteBooking($id: Int!) {
-    deleteBooking(id: $id) {
-      id
-    }
-  }
-`;
 
 const VehiclePage = () => {
   const router = useRouter();
@@ -51,7 +17,7 @@ const VehiclePage = () => {
   const vehicleId = searchParams.get("id");
   const sessionData = sessionStorage.getItem("userData");
   const user = sessionData ? JSON.parse(sessionData) : null;
-  const [deleteBooking] = useMutation(DELETE_BOOKING);
+  const [deleteBooking] = useMutation(bookingServices.DELETE_BOOKING);
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -95,8 +61,8 @@ const VehiclePage = () => {
   const dropoffDate = new Date(formData.dropoffDate);
   const noOfDays = dropoffDate.getDate() - pickupDate.getDate() + 1;
   const amount = noOfDays * Number(price);
-  const [createBooking] = useMutation(CREATE_BOOKING);
-  const [updateBookingPayment] = useMutation(UPDATE_BOOKING_PAYMENT);
+  const [createBooking] = useMutation(bookingServices.CREATE_BOOKING);
+  const [updateBookingPayment] = useMutation(bookingServices.UPDATE_BOOKING_PAYMENT);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -171,16 +137,7 @@ const VehiclePage = () => {
             },
           },
         };
-        const rzp1 = new (window as any).Razorpay(options);
-
-        // rzp1.on('payment.failed', async function (response) {
-        //   // If payment failed, delete the booking
-        //   await deleteBooking({ variables: { id: data.createBooking.id } });
-        //   toast.error("Payment failed.", {
-        //     position: "top-right",
-        //     autoClose: 2000,
-        //   });
-        // });
+        const rzp1 = new (window as any).Razorpay(options); 
 
         rzp1.open();
       }
@@ -206,6 +163,8 @@ const VehiclePage = () => {
     
   };
 
+
+  
   return (
     <div>
       {showModal && (

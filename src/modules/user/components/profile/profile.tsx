@@ -2,14 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { useRouter } from 'next/navigation';
 import styles from './profile.module.css';
 import userServices from '../../services/userServices';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ProfilePage = () => {
-    const router = useRouter();
     const sessionData = sessionStorage.getItem("userData");
   const user = sessionData ? JSON.parse(sessionData) : null;
   const userId = user.id;
@@ -21,7 +19,10 @@ const ProfilePage = () => {
       state: "",
       country: "",
       pincode: "",
+    });
+    const [passwordData, setPasswordData] = useState({
       password: "",
+      newPassword: "",
       confirmPassword: "",
     });
   
@@ -31,7 +32,9 @@ const ProfilePage = () => {
       });
       const [imageFile, setImageFile] = useState<File | null>(null);
       const [image, setImage] = useState('');
-      const [updateCustomer] = useMutation(userServices.UPDATE_CUSTOMER);
+      const [showForm, setShowForm] = useState(false);
+      const [updateCustomer , {error : updateError}] = useMutation(userServices.UPDATE_CUSTOMER);
+      const [changePassword , {error : passwordError}] = useMutation(userServices.CHANGE_PASSWORD);
 
       useEffect(() => {
         if (data) {
@@ -43,9 +46,6 @@ const ProfilePage = () => {
             state: data.customer.state,
             country: data.customer.country,
             pincode: data.customer.pincode,
-            password: "",
-            confirmPassword: "",
-
           });
           setImage(data.customer.image);
         }
@@ -58,6 +58,13 @@ const ProfilePage = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setCustomerData({
         ...customerData,
+        [e.target.name]: e.target.value,
+      });
+    };
+
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPasswordData({
+        ...passwordData,
         [e.target.name]: e.target.value,
       });
     };
@@ -84,6 +91,34 @@ const ProfilePage = () => {
         console.error(err);
       }
     };
+
+   
+    const handleChangePassword = async () => {
+    setShowForm(!showForm);
+    };
+
+    const handleFormSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+  
+      try {
+        await changePassword({
+          variables: {
+            id: parseInt(userId),
+            password : passwordData.password,
+            newPassword :passwordData.newPassword,
+            confirmPassword :passwordData.confirmPassword,
+          },
+        });
+        refetch();
+        setShowForm(false);
+          toast.success("Password updated!", {
+            position: "top-right",
+            autoClose: 2000,
+          });
+      } catch (err) {
+        console.error(err);
+      }
+    };
   
     return (
         <>
@@ -94,13 +129,46 @@ const ProfilePage = () => {
         <div className={styles.vehicle}>
         <div className={styles.vehicleDetails}>
         <div className={styles.name}>
-        {/* <h2>{customerData.name}</h2> */}
         </div>
-        <img src={image} alt={customerData.name} />
-        <button disabled={loading} onClick={handleSubmit}>
-            {loading ? "Updating..." : "Update Profile"}
+        <img src={image} alt="Add a profile picture" />
+        <button onClick={handleChangePassword} className={styles.vehicleDetailsButton}>
+            Change Password
           </button>
-        
+        {showForm &&
+         <form className={styles.showForm}>
+         {passwordError && <p style={{ color: "red" }}>Error: {passwordError.message}</p>}
+           <input
+             type="password"
+             name="password"
+             value={passwordData.password}
+             onChange={handleFormChange}
+             placeholder="Current Password"
+             required
+           />
+            <input
+             type="password"
+             name="newPassword"
+             value={passwordData.newPassword}
+             onChange={handleFormChange}
+             placeholder="New Password"
+             required
+           />
+           <input
+             type="password"
+             name="confirmPassword"
+             value={passwordData.confirmPassword}
+             onChange={handleFormChange}
+             placeholder="Confirm Password"
+             required
+           />
+            <button disabled={loading} onClick={handleFormSubmit} className={styles.showFormButton}>
+             Submit
+           </button>
+           <div className={styles.button}>
+ 
+         </div>
+         </form>
+        }
         </div>
        
         </div>
@@ -109,6 +177,7 @@ const ProfilePage = () => {
                    
   <div className={styles.modalContent}>
         <form>
+        {updateError && <p style={{ color: "red" }}>Error: {updateError.message}</p>}
           <input
             type="text"
             name="name"
@@ -172,7 +241,7 @@ const ProfilePage = () => {
             }
           }}
         />
-          <input
+          {/* <input
             type="password"
             name="password"
             value={customerData.password}
@@ -187,9 +256,12 @@ const ProfilePage = () => {
             onChange={handleChange}
             placeholder="Confirm Password"
             required
-          />
+          /> */}
+           <button disabled={loading} onClick={handleSubmit}>
+            {loading ? "Updating..." : "Update Profile"}
+          </button>
           <div className={styles.button}>
-        
+
         </div>
           
           {error && <p style={{ color: "red" }}>Error: {error.message}</p>}

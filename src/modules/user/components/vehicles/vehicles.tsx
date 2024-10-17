@@ -1,6 +1,6 @@
 "use client";
 
-import React,{useState} from "react";
+import React,{ReactHTMLElement, useState} from "react";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import styles from "./vehicles.module.css";
@@ -10,7 +10,11 @@ import { Vehicle } from "../../../../app/types/vehicleType";
 const VehiclePage = () => {
   const router = useRouter();
   const [query, setQuery] = useState('');
-  const { data, loading, error } = useQuery(vehicleServices.GET_ALL_RENTABLE_VEHICLES);
+  const [sort, setSort] = useState('');
+  // const { data, loading, error } = useQuery(vehicleServices.GET_ALL_RENTABLE_VEHICLES);
+  const { data, loading, error } = useQuery(vehicleServices.GET_ALL_RENTABLE_VEHICLES_SORTED, {
+    variables: { sortOrder : sort }, 
+  });
   const { data:searchData, loading:searchLoading, error:searchError } = useQuery(vehicleServices.SEARCH_VEHICLES, {
     variables: { query: query   }, 
     skip: !query,  
@@ -25,13 +29,16 @@ const VehiclePage = () => {
   if (error) return <p>Error fetching..: {error.message}</p>;
 
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     setQuery(e.target.value);
+  };
+  const handleSortChange = (e: any) => {
+    setSort(e.target.value);
   };
 
   const vehicles = query 
   ? searchData?.searchRentableVehicles|| []
-  : data?.getAllRentableVehicles || [];
+  : data?.getAllRentableVehiclesSorted || [];
 
  
 
@@ -79,7 +86,13 @@ const renderVehicles = () => {
         onChange={handleInputChange}
         placeholder="Search..."
       />
+      <select value={sort} onChange={handleSortChange}>
+          <option value="">Sort by price:</option>
+          <option value="asc">Price: Low to High</option>
+          <option value="desc">Price: High to Low</option>
+        </select>
       </div>
+
       {data && (
         <div className={styles.cardContainer}>
           {renderVehicles()}
