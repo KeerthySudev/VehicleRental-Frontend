@@ -4,8 +4,8 @@ import client from '../../../lib/apolloClient';
 import Navbar from '../components/navbar/navbar';
 import UserHome from '../components/home/home';
 import VehiclePage from '../components/vehicles/vehicles';
+import TestPage from '@/modules/test/components/test';
 import { ToastContainer } from 'react-toastify';
-import Footer from '@/modules/test/components/vehicleform';
 
 const HomeView = () => {
   return (
@@ -14,6 +14,7 @@ const HomeView = () => {
        <Navbar/>
        <UserHome/>
        <VehiclePage/>
+       <TestPage/>
    </ApolloProvider>
   );
 };

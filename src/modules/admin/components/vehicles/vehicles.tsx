@@ -18,7 +18,6 @@ import { Vehicle } from "../../../../app/types/vehicleType";
 
 const VehiclePageAdmin = () => {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
   const [checked, setChecked] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [toggleRentable] = useMutation(vehicleServices.TOGGLE_RENTABLE);
