@@ -66,11 +66,10 @@ const VehiclePageAdmin = () => {
     data: dataManufacturers,
   } = useQuery(vehicleServices.GET_ALL_MANUFACTURERS);
 
-  const [updateVehicle] = useMutation(vehicleServices.UPDATE_VEHICLE);
+  const [updateVehicle, {error: updateVehicleError}] = useMutation(vehicleServices.UPDATE_VEHICLE);
 
   const {
     data: modelsData,
-    refetch: fetchModelsByManufacturer,
     loading: modelsLoading,
     error: modelsErrors,
   } = useQuery(vehicleServices.GET_MODELS_BY_MANUFACTURER, {
@@ -91,7 +90,7 @@ const VehiclePageAdmin = () => {
     setShowEditModal(true);
   };
 
-  const [addVehicle] = useMutation(vehicleServices.ADD_VEHICLE, {
+  const [addVehicle, {error:addVehicleError}] = useMutation(vehicleServices.ADD_VEHICLE, {
     onCompleted: (data) => {
       // Reset form or show success message if needed
       setName("");
@@ -317,9 +316,9 @@ const VehiclePageAdmin = () => {
           >
             <FontAwesomeIcon icon={faTrash} />
           </button>
-          <button className={styles.info}>
+          {/* <button className={styles.info}>
             <FontAwesomeIcon icon={faEye} />
-          </button>
+          </button> */}
           {vehicle.isRentable ? (
             <button
               onClick={() => handleRentable(vehicle.id)}
@@ -355,6 +354,7 @@ const VehiclePageAdmin = () => {
           >
             <h2>Add Vehicle</h2>
             <form onSubmit={(e) => handleFormSubmit(e)}>
+            {addVehicleError && <p style={{ color: "red" }}>Error: {addVehicleError.message}</p>}
               <input
                 type="text"
                 placeholder="Name"
@@ -429,6 +429,7 @@ No:of seats:
                 placeholder="No: of seats"
                 value={seats}
                 onChange={(e) => setSeats(e.target.value)}
+                min={1}
                 required
               />
               Quantity:
@@ -436,6 +437,7 @@ No:of seats:
                 type="number"
                 placeholder="Quantity"
                 value={availableQty}
+                min={1}
                 onChange={(e) => setAvailableQty(e.target.value)}
                 required
               />
@@ -445,6 +447,7 @@ No:of seats:
                 type="number"
                 placeholder="Price"
                 value={price}
+                min={100}
                 onChange={(e) => setPrice(e.target.value)}
                 required
               />
@@ -547,6 +550,7 @@ Primary Image:
           >
             <h2>Edit Vehicle</h2>
             <form onSubmit={(e) => handleEditFormSubmit(e)}>
+            {updateVehicleError && <p style={{ color: "red" }}>Error: {updateVehicleError.message}</p>}
               <input
                 type="text"
                 name="name"
@@ -608,6 +612,7 @@ No:of seats:
                 placeholder="Seats"
                 value={updateVehicleData.seats}
                 onChange={handleChange}
+                min={1}
                 required
               />
 
@@ -616,6 +621,7 @@ No:of seats:
                 type="number"
                 name="availableQty"
                 placeholder="Quantity"
+                min={1}
                 value={updateVehicleData.availableQty}
                 onChange={handleChange}
                 required
@@ -625,6 +631,7 @@ Price:
 <input
                 type="number"
                 name="price"
+                min={100}
                 placeholder="Price"
                 value={updateVehicleData.price}
                 onChange={handleChange}
