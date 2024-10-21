@@ -10,7 +10,6 @@ const vehicleServices = {
         description
         price
         primaryImage
-        secondaryImage
         availableQty
         manufacturer {
           id
@@ -33,8 +32,11 @@ query GetVehicleById($id: Int!) {
     description
     price
     primaryImage
-    secondaryImage
+    otherImages
     availableQty
+    seats
+    fuelType
+    gear
     manufacturer {
       id
       name
@@ -54,7 +56,6 @@ query GetAllVehicles {
     description
     price
     primaryImage
-    secondaryImage
     availableQty
     isRentable
     manufacturer {
@@ -76,7 +77,6 @@ query SearchRentableVehicles($query: String!) {
     description
     price
     primaryImage
-    secondaryImage
     availableQty
     isRentable
     manufacturerName
@@ -92,7 +92,6 @@ query GetAllRentableVehiclesSorted($sortOrder: String!) {
     description
     price
     primaryImage
-    secondaryImage
     availableQty
     isRentable
     manufacturerName

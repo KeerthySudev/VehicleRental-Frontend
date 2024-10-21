@@ -156,15 +156,10 @@ const VehiclePage = () => {
         position: "top-right",
         autoClose: 2000,
       });
-
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
     
   };
 
 
-  
   return (
     <div>
       {showModal && (
@@ -299,10 +294,9 @@ const VehiclePage = () => {
               />
             </div>
             <div className={styles.images}>
-              <img
-                src={data.getVehicleById.secondaryImage}
-                alt={data.getVehicleById.name}
-              />
+            {data.getVehicleById.otherImages.map((url, index) => (
+              <img key={index} src={url} alt={`Vehicle Image ${index + 1}`} />
+            ))}
             </div>
           </div>
 
@@ -310,9 +304,28 @@ const VehiclePage = () => {
             <div className={styles.description}>
               <p>{data.getVehicleById.description}</p>
             </div>
-            {/* <div className={styles.technical}>
+            <div className={styles.technical}>
   <h3>Technical Specification</h3>
-</div> */}
+  <div className={styles.technicalBoxes}>
+  <div className={styles.technicalBox}>
+  <img src="/images/gear-shift(1).svg" alt="logo" />
+  <h3>Gear box</h3>
+  <p>{data.getVehicleById.gear}</p>
+    </div>
+    <div className={styles.technicalBox}>
+
+    <img src="/images/g17.svg" alt="logo" />
+    <h3>Fuel Type</h3>
+  <p>{data.getVehicleById.fuelType}</p>
+    </div>
+    <div className={styles.technicalBox}>
+    <img src="/images/group.svg" alt="logo" />
+    <h3>Seats</h3>
+  <p>{data.getVehicleById.seats}</p>
+    </div>
+
+    </div>
+</div>
             <div className={styles.button}>
               {user ? (
                 <button onClick={() => setShowModal(true)}>Rent now</button>

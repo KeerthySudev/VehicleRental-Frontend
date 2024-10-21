@@ -5,23 +5,29 @@ const vehicleServices = {
   ADD_VEHICLE : gql`
   mutation CreateVehicle(
     $name: String!
+    $gear: String
+    $fuelType: String
+    $seats: Int
     $description: String!
     $price: Float!
     $primaryImageFile: Upload!
-    $secondaryImageFile: Upload!
     $availableQty: Int!
     $manufacturerId: Int!
     $modelId: Int!
+    $otherImageFiles: [Upload]
   ) {
     createVehicle(
       name: $name
+      gear: $gear
+      fuelType: $fuelType
+      seats: $seats
       description: $description
       price: $price
       primaryImageFile: $primaryImageFile
-      secondaryImageFile: $secondaryImageFile
       availableQty: $availableQty
       manufacturerId: $manufacturerId
       modelId: $modelId
+      otherImageFiles: $otherImageFiles
     ) {
       availableQty
       description
@@ -38,7 +44,7 @@ const vehicleServices = {
       name
       price
       primaryImage
-      secondaryImage
+      otherImages
     }
   }
 `,
@@ -51,7 +57,6 @@ const vehicleServices = {
         description
         price
         primaryImage
-        secondaryImage
         availableQty
         isRentable
         manufacturer {
@@ -73,7 +78,6 @@ const vehicleServices = {
       description
       price
       primaryImage
-      secondaryImage
       availableQty
       isRentable
       manufacturer {
@@ -87,7 +91,7 @@ const vehicleServices = {
     }
   }
 `,
-  GET_VEHICLE_BY_ID : gql`
+GET_VEHICLE_BY_ID : gql`
 query GetVehicleById($id: Int!) {
   getVehicleById(id: $id) {
     id
@@ -95,8 +99,11 @@ query GetVehicleById($id: Int!) {
     description
     price
     primaryImage
-    secondaryImage
+    otherImages
     availableQty
+    seats
+    fuelType
+    gear
     manufacturer {
       id
       name
@@ -183,7 +190,6 @@ query SearchVehicles($query: String!) {
     description
     price
     primaryImage
-    secondaryImage
     availableQty
     isRentable
     manufacturerName
@@ -193,13 +199,16 @@ query SearchVehicles($query: String!) {
 `,
 
 UPDATE_VEHICLE : gql`
-mutation UpdateVehicle($id: Int!, $data: VehicleInput, $primaryImageFile: Upload , $secondaryImageFile: Upload) {
-    updateVehicle(id: $id, data: $data, primaryImageFile: $primaryImageFile, secondaryImageFile: $secondaryImageFile) {
+mutation UpdateVehicle($id: Int!, $data: VehicleInput, $primaryImageFile: Upload , $otherImageFiles: [Upload]) {
+    updateVehicle(id: $id, data: $data, primaryImageFile: $primaryImageFile, otherImageFiles: $otherImageFiles) {
       id
       name
       description
       price
       availableQty
+      seats
+      fuelType
+      gear
     }
   }`
 

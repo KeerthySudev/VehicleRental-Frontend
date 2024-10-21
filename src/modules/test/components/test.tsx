@@ -94,12 +94,7 @@ const vehicleId = 1;
                 alt={data.getTestById.name}
               />
             </div>
-            <div className={styles.images}>
-              <img
-                src={data.getTestById.secondaryImage}
-                alt={data.getTestById.name}
-              />
-            </div>
+
           </div>
 
           <div className={styles.specification}>
@@ -129,6 +124,7 @@ const vehicleId = 1;
             setOtherImageFiles(null); // Handle null case if needed
           }
         }}
+        required
       />
       <button type="submit" className={styles.submitButton}>
         Add

@@ -31,15 +31,20 @@ const VehiclePageAdmin = () => {
   const [description, setDescription] = useState("");
   const [manufacturerId, setManufacturerId] = useState(0);
   const [modelId, setModelId] = useState(0);
-  const [price, setPrice] = useState(0);
-  const [availableQty, setAvailableQty] = useState(0);
+  const [price, setPrice] = useState('');
+  const [seats, setSeats] = useState('');
+  const [fuelType, setFuelType] = useState("");
+  const [gear, setGear] = useState("");
+  const [availableQty, setAvailableQty] = useState('');
   const [primaryImageFile, setPrimaryImageFile] = useState<File | null>(null);
-  const [secondaryImageFile, setSecondaryImageFile] = useState<File | null>(
+
+  const [otherImageFiles, setOtherImageFiles] = useState<[File] | null>(
     null
   );
+
   const [updatePrimaryImageFile, setUpdatePrimaryImageFile] =
     useState<File | null>(null);
-  const [updateSecondaryImageFile, setUpdateSecondaryImageFile] =
+  const [updateOtherImageFiles, setUpdateOtherImageFiles] =
     useState<File | null>(null);
   const [models, setModels] = useState([]);
 
@@ -49,8 +54,11 @@ const VehiclePageAdmin = () => {
     description: "",
     manufacturer: "",
     model: "",
-    price: 0,
-    availableQty: 0,
+    price: '',
+    availableQty: '',
+    seats: "",
+    fuelType:"",
+    gear:"",
   });
   const {
     loading: loadingManufacturers,
@@ -88,12 +96,15 @@ const VehiclePageAdmin = () => {
       // Reset form or show success message if needed
       setName("");
       setDescription("");
-      setAvailableQty(0);
+      setAvailableQty('');
       setManufacturerId(0);
       setModelId(0);
-      setPrice(0);
+      setPrice('');
+      setSeats('');
+      setGear("");
+      setFuelType("");
       setPrimaryImageFile(null);
-      setSecondaryImageFile(null);
+      setOtherImageFiles(null);
     },
   });
 
@@ -113,6 +124,9 @@ const VehiclePageAdmin = () => {
         model: vehicleData.getVehicleById.model.name,
         price: vehicleData.getVehicleById.price,
         availableQty: vehicleData.getVehicleById.availableQty,
+        seats: vehicleData.getVehicleById.seats,
+        fuelType: vehicleData.getVehicleById.fuelType,
+        gear: vehicleData.getVehicleById.gear,
       });
     }
   }, [vehicleData]);
@@ -135,16 +149,19 @@ const VehiclePageAdmin = () => {
 
   const handleFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    if (primaryImageFile && secondaryImageFile) {
+    if (primaryImageFile) {
       try {
         const result = await addVehicle({
           variables: {
             name,
             description,
-            price,
+            price : parseFloat(price),
+            seats: parseInt(seats),
+            gear,
+            fuelType,
             primaryImageFile,
-            secondaryImageFile,
-            availableQty,
+            otherImageFiles,
+            availableQty : parseInt(availableQty),
             manufacturerId,
             modelId,
           },
@@ -187,13 +204,16 @@ const VehiclePageAdmin = () => {
             description: updateVehicleData.description,
             price: parseFloat(updateVehicleData.price),
             availableQty: parseInt(updateVehicleData.availableQty),
+            seats: parseInt(updateVehicleData.seats),
+            fuelType: updateVehicleData.fuelType,
+            gear: updateVehicleData.gear,
           },
           primaryImageFile: updatePrimaryImageFile,
-          secondaryImageFile: updateSecondaryImageFile,
+          otherImageFiles: updateOtherImageFiles,
         },
       });
       setUpdatePrimaryImageFile(null);
-      setUpdateSecondaryImageFile(null);
+      setUpdateOtherImageFiles(null);
       toast.success("Vehicle updated!", {
         position: "top-right",
         autoClose: 2000,
@@ -342,6 +362,7 @@ const VehiclePageAdmin = () => {
                 onChange={(e) => setName(e.target.value)}
                 required
               />
+              <div className={styles.manufacturer}>
               <select
                 value={manufacturerId}
                 onChange={(e) => setManufacturerId(Number(e.target.value))}
@@ -368,6 +389,30 @@ const VehiclePageAdmin = () => {
                   </option>
                 ))}
               </select>
+              </div>
+
+              <div className={styles.manufacturer}>
+              <select
+                value={fuelType}
+                onChange={(e) => setFuelType(e.target.value)}
+                required
+              >
+                <option value="">Fuel Type</option>
+                  <option>Petrol</option>
+                   <option> Diesel</option>
+              </select>
+
+              <select
+                value={gear}
+                onChange={(e) => setGear(e.target.value)}
+                required
+              >
+                <option value="">Gearbox</option>
+                  <option>Automatic</option>
+                   <option> Manual</option>
+              </select>
+              </div>
+              
 
               <textarea
                 placeholder="Description"
@@ -376,24 +421,41 @@ const VehiclePageAdmin = () => {
                 rows={4}
                 required
               />
+                            <div className={styles.numbers}>
+
+No:of seats:
               <input
                 type="number"
-                placeholder="Price"
-                value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
+                placeholder="No: of seats"
+                value={seats}
+                onChange={(e) => setSeats(e.target.value)}
                 required
               />
+              Quantity:
               <input
                 type="number"
                 placeholder="Quantity"
                 value={availableQty}
-                onChange={(e) => setAvailableQty(Number(e.target.value))}
+                onChange={(e) => setAvailableQty(e.target.value)}
+                required
+              />
+</div>
+                Price:
+              <input
+                type="number"
+                placeholder="Price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
                 required
               />
 
+
+<div className={styles.files}>
+Primary Image:
               <input
                 type="file"
                 accept="image/*"
+                required
                 onChange={(e) => {
                   if (e.target.files?.[0]) {
                     setPrimaryImageFile(e.target.files[0]);
@@ -402,17 +464,32 @@ const VehiclePageAdmin = () => {
                   }
                 }}
               />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files?.[0]) {
-                    setSecondaryImageFile(e.target.files[0]); // Set file if available
-                  } else {
-                    setSecondaryImageFile(null); // Handle null case if needed
-                  }
-                }}
-              />
+
+              Other images:
+                    <input
+        type="file"
+        multiple
+        accept="image/*"
+        onChange={(e) => {
+          if (e.target.files) {
+            const selectedFiles = Array.from(e.target.files);
+            if (selectedFiles.length > 4) {
+              // Show an alert or handle the error
+              toast.error("You can only upload a maximum of 4 images!", {
+                position: "top-right",
+                autoClose: 2000,
+              });
+              e.target.value = null; // Clear the selection
+            } else {
+              setOtherImageFiles(selectedFiles); // Set files if valid
+            }
+          } else {
+            setOtherImageFiles(null); // Handle null case if needed
+          }
+        }}
+        required
+      />
+      </div>
               <button type="submit" className={styles.submitButton}>
                 Add
               </button>
@@ -478,12 +555,40 @@ const VehiclePageAdmin = () => {
                 onChange={handleChange}
                 required
               />
+              <div className={styles.manufacturerInput}>
               <input
                 type="text"
                 value={updateVehicleData.manufacturer}
                 readOnly
               />
               <input type="text" value={updateVehicleData.model} readOnly />
+              </div>
+              
+              <div className={styles.manufacturer}>
+              <select
+              name="fuelType"
+                onChange={handleChange}
+                value={updateVehicleData.fuelType}
+                // onChange={(e) => setFuelType(e.target.value)}
+                required
+              >
+                <option value="">Fuel Type</option>
+                  <option>Petrol</option>
+                   <option> Diesel</option>
+              </select>
+
+              <select
+              name="gear"
+              onChange={handleChange}
+                value={updateVehicleData.gear}
+                // onChange={(e) => setGear(e.target.value)}
+                required
+              >
+                <option value="">Gearbox</option>
+                  <option>Automatic</option>
+                   <option> Manual</option>
+              </select>
+              </div>
 
               <textarea
                 placeholder="Description"
@@ -493,14 +598,20 @@ const VehiclePageAdmin = () => {
                 rows={4}
                 required
               />
-              <input
+
+<div className={styles.numbers}>
+
+No:of seats:
+<input
                 type="number"
-                name="price"
-                placeholder="Price"
-                value={updateVehicleData.price}
+                name="seats"
+                placeholder="Seats"
+                value={updateVehicleData.seats}
                 onChange={handleChange}
                 required
               />
+
+               Quantity:
               <input
                 type="number"
                 name="availableQty"
@@ -509,6 +620,18 @@ const VehiclePageAdmin = () => {
                 onChange={handleChange}
                 required
               />
+</div>
+Price:
+<input
+                type="number"
+                name="price"
+                placeholder="Price"
+                value={updateVehicleData.price}
+                onChange={handleChange}
+                required
+              />
+<div className={styles.files}>
+Primary Image:
 
               <input
                 type="file"
@@ -521,17 +644,30 @@ const VehiclePageAdmin = () => {
                   }
                 }}
               />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files?.[0]) {
-                    setUpdateSecondaryImageFile(e.target.files[0]); // Set file if available
-                  } else {
-                    setUpdateSecondaryImageFile(null); // Handle null case if needed
-                  }
-                }}
-              />
+         Other images:     
+         <input
+        type="file"
+        multiple
+        accept="image/*"
+        onChange={(e) => {
+          if (e.target.files) {
+            const selectedFiles = Array.from(e.target.files);
+            if (selectedFiles.length > 4) {
+              // Show an alert or handle the error
+              toast.error("You can only upload a maximum of 4 images!", {
+                position: "top-right",
+                autoClose: 2000,
+              });
+              e.target.value = null; // Clear the selection
+            } else {
+              setUpdateOtherImageFiles(selectedFiles); // Set files if valid
+            }
+          } else {
+            setUpdateOtherImageFiles(null); // Handle null case if needed
+          }
+        }}
+      />
+              </div>
               <button type="submit" className={styles.submitButton}>
                 Update
               </button>

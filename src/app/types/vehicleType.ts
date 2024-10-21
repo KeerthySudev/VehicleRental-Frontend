@@ -9,7 +9,6 @@ export interface Vehicle {
     price: number;
     availableQty: number;
     primaryImage: string;
-    secondaryImage: string;
     isRentable : boolean;
   }
  export  interface Manufacturer {

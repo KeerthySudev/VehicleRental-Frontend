@@ -5,7 +5,25 @@
     flex-direction: column;
 }
 
+.manufacturer, .numbers, .files, .manufacturerInput{
+  display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+.modalContent .manufacturer select{
+  width: 46%;
+}
+.modalContent .manufacturerInput input{
+  width: 43%;
+}
 
+.modalContent .numbers input{
+  width: 27%;
+}
+
+.modalContent .files input{
+  width: 21%;
+}
 .importForm{
     display: flex;
     flex-direction: row;
@@ -200,7 +218,7 @@
     background-color: #6853bd;
     padding: 20px;
     border-radius: 8px;
-    max-width: 400px;
+    max-width: 550px;
     width: 100%;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: relative;
