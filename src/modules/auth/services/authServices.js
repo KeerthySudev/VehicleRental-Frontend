@@ -7,14 +7,7 @@ const authServices = {
     login(email: $email, password: $password) {
       token
       user {
-        city
-        country
-        email
         id
-        name
-        phone
-        pincode
-        state
         role
       }
     }
