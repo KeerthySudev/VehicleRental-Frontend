@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import styles from './home.module.css';
-
+import Cookies from 'js-cookie';
 
 
 const UserHome  = () => {
@@ -19,7 +19,7 @@ const UserHome  = () => {
     isDifferentDropoff: false,
   });
 
-    const handleChange = (e: any) => {
+    const handleChange = ( e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -27,9 +27,9 @@ const UserHome  = () => {
     }));
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    sessionStorage.setItem('formData', JSON.stringify(formData));
+    Cookies.set('formData', JSON.stringify(formData), { expires: 1 });
     router.push("/vehicles");
   };
 

@@ -6,11 +6,18 @@ import styles from './profile.module.css';
 import userServices from '../../services/userServices';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from 'js-cookie';
 
 const ProfilePage = () => {
-    const sessionData = sessionStorage.getItem("userData");
-  const user = sessionData ? JSON.parse(sessionData) : null;
-  const userId = user.id;
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const userData = Cookies.get("userData");
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      setUserId(parsedUser.id); 
+    }
+  }, []);
     const [customerData, setCustomerData] = useState({
       name: "",
       email: "",
@@ -76,7 +83,7 @@ const ProfilePage = () => {
       try {
         await updateCustomer({
           variables: {
-            id: parseInt(userId),
+            id: userId ? parseInt(userId, 10) : null,
             data: { ...customerData },
             imageFile : imageFile,
           },
@@ -103,7 +110,7 @@ const ProfilePage = () => {
       try {
         await changePassword({
           variables: {
-            id: parseInt(userId),
+            id: userId ? parseInt(userId, 10) : null,
             password : passwordData.password,
             newPassword :passwordData.newPassword,
             confirmPassword :passwordData.confirmPassword,
@@ -111,6 +118,11 @@ const ProfilePage = () => {
         });
         refetch();
         setShowForm(false);
+        setPasswordData({
+          password: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
           toast.success("Password updated!", {
             position: "top-right",
             autoClose: 2000,
@@ -241,22 +253,7 @@ const ProfilePage = () => {
             }
           }}
         />
-          {/* <input
-            type="password"
-            name="password"
-            value={customerData.password}
-            onChange={handleChange}
-            placeholder="Password"
-            required
-          />
-          <input
-            type="password"
-            name="confirmPassword"
-            value={customerData.confirmPassword}
-            onChange={handleChange}
-            placeholder="Confirm Password"
-            required
-          /> */}
+
            <button disabled={loading} onClick={handleSubmit}>
             {loading ? "Updating..." : "Update Profile"}
           </button>
@@ -264,7 +261,7 @@ const ProfilePage = () => {
 
         </div>
           
-          {error && <p style={{ color: "red" }}>Error: {error.message}</p>}
+          {updateError && <p style={{ color: "red" }}>Error: {updateError.message}</p>}
         </form>
       </div>
        

@@ -5,14 +5,15 @@ import styles from "./navbar.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from 'js-cookie';
 
 const Navbar = () => {
   const router = useRouter();
 
   const handleLogout = () => {
     const confirmToast = () => {
-      sessionStorage.removeItem("authToken");
-      sessionStorage.removeItem("userData");
+      Cookies.remove('authToken');
+      Cookies.remove('userData');
 
       toast.success("Logged out successfully!", {
         position: "top-right",
@@ -46,7 +47,7 @@ const Navbar = () => {
       </div>
       <div className={styles.menu}>
         <a href="/admin">Home</a>
-        <a href="/admin/vehicles">Vehicles</a>
+        <a href="/admin/vehicles">Cars</a>
         <a href="/admin/manufacturers">Manufacturers</a>
         <a href="/admin/allBookings">Bookings</a>
       </div>

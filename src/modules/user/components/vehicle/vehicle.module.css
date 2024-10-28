@@ -22,7 +22,6 @@
     width: 636px;
     display: flex;
     flex-direction: column;
-    /* background-color: antiquewhite; */
     margin-top: 60px;
 }
 .vehicleDetails{
@@ -57,7 +56,6 @@
     width: auto;
     display: flex;
     flex-direction: column;
-    /* margin-top: 65px; */
 }
 
 .name h2, .name h3{

@@ -17,11 +17,6 @@ const HomePageAdmin = () => {
     );
   };
 
-  const handleClick = (vehicleId: any) => {
-    router.push(
-      `admin/vehicle?id=${encodeURIComponent(vehicleId)}`
-    );
-  };
 
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error fetching..: {error.message}</p>;

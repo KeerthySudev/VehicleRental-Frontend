@@ -68,9 +68,10 @@ const BookingsPage = () => {
 
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>No bookings found.</p>;
-  const handleRent = async (id: any) => {
+  const handleRent = async (id: string | number) => {
+    const parsedId = typeof id === 'string' ? parseInt(id, 10) : id;
     await rentOutVehicle({
-      variables: { id: parseInt(id, 10) },
+      variables: { id: parsedId },
     });
     toast.success("Status updated!", {
       position: "top-right",

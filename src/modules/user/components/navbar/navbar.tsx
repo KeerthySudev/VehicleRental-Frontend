@@ -1,24 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./navbar.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const router = useRouter();
-  const sessionData = sessionStorage?.getItem("userData");
-  const user = sessionData ? JSON.parse(sessionData) : null;
+  const [user, setUser] = useState(null);
+ 
 
+
+  useEffect(() => {
+    const userData = Cookies.get("userData");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+  
   const handleClick = async () => {
     router.push("/login");
   };
 
+
   const handleLogout = () => {
     const confirmToast = () => {
-      sessionStorage.removeItem("authToken");
-      sessionStorage.removeItem("userData");
+      Cookies.remove("authToken");
+      Cookies.remove("userData");
 
       toast.success("Logged out successfully!", {
         position: "top-right",
@@ -50,18 +60,20 @@ const Navbar = () => {
         <img src="/images/logo.svg" alt="logo" />
         <p>MotoRent</p>
       </div>
+
+      
       <div className={styles.menu}>
         {user ? (
           <>
             <a href="/">Home</a>
-            <a href="/vehicles">Vehicles</a>
+            <a href="/vehicles">Cars</a>
             <a href="/booking">Bookings</a>
             <a href="/profile">Profile</a>
           </>
         ) : (
           <>
             <a href="/">Home</a>
-            <a href="/vehicles">Vehicles</a>
+            <a href="/vehicles">Cars</a>
           </>
         )}
       </div>

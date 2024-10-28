@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import styles from "./booking.module.css";
 import { toast } from "react-toastify";
@@ -8,12 +8,19 @@ import "react-toastify/dist/ReactToastify.css";
 import FileSaver from "file-saver";
 import { Booking } from "@/app/types/bookingType";
 import bookingServices from "../../services/bookingServices";
+import Cookies from 'js-cookie';
 
 const BookingsPage = () => {
-  const sessionData = sessionStorage?.getItem("userData");
-  const user = sessionData ? JSON.parse(sessionData) : null;
-  const userId = user?.id;
-  const [bookingID, setBookingID] = useState();
+  const [userId, setUserId] = useState(null); 
+
+  useEffect(() => {
+    const userData = Cookies.get("userData");
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      setUserId(parsedUser.id); 
+    }
+  }, []);
+  const [bookingID, setBookingID] = useState<number | null>(null);
 
   const { data, loading, error } = useQuery(
     bookingServices.GET_BOOKINGS_BY_USER,
@@ -23,15 +30,19 @@ const BookingsPage = () => {
     }
   );
 
+  
   const { data: exportData } = useQuery(bookingServices.EXPORT_BOOKING, {
-    variables: { id: bookingID ? parseInt(bookingID, 10) : null },
+    variables: { id: bookingID ? bookingID: null },
     skip: !bookingID,
   });
 
   const bookings = data?.getBookingsByUser;
   console.log(data);
 
-  const handleExport = (id: any) => {
+  const handleExport = (id: number) => {
+    
+    setBookingID(id);
+
     const confirmToast = () => {
       try {
         console.log("data", exportData);
@@ -64,7 +75,7 @@ const BookingsPage = () => {
         });
       }
     };
-    setBookingID(id);
+    
 
     toast.info(
       <div>

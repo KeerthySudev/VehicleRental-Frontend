@@ -5,13 +5,13 @@ import { useMutation } from "@apollo/client";
 import { useRouter } from 'next/navigation';
 import styles from './login.module.css';
 import authServices from "../../services/authServices";
-
+import Cookies from 'js-cookie';
 
 const LoginForm  = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [login, { data, loading, error }] = useMutation(authServices.LOGIN_USER);
+  const [login, { loading, error }] = useMutation(authServices.LOGIN_USER);
 
   const handleClick = async () => {
     router.push("/register");
@@ -24,11 +24,9 @@ const LoginForm  = () => {
       const { data } = await login({ variables: { email, password } });
       
       if (data?.login) {
-        // Store the token in sessionStorage
-        sessionStorage.setItem('authToken', data.login.token);
         
-        // Store user data in sessionStorage (optional, but can be useful)
-        sessionStorage.setItem('userData', JSON.stringify(data.login.user));
+        Cookies.set('authToken', data.login.token, { expires: 1/24 });
+        Cookies.set('userData', JSON.stringify(data.login.user), { expires: 1/24 });
         
         // Check user role and redirect
         if (data.login.user.role === 'admin') {

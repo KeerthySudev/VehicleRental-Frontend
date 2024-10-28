@@ -40,6 +40,7 @@ const ManufacturersPage = () => {
     vehicleServices.CREATE_MANUFACTURER,
     {
       onCompleted: (data) => {
+        console.log(data);
         setName("");
         setImageFile(null);
       },
@@ -91,13 +92,14 @@ const ManufacturersPage = () => {
     setShowForm((prevId) => (prevId === id ? null : id));
   };
 
-  const handleSubmit = async (manufacturerId: any) => {
+  const handleSubmit = async (manufacturerId: string | number) => {
     try {
+      const parsedId = typeof manufacturerId === 'string' ? parseInt(manufacturerId, 10) : manufacturerId;
       const name = modelName;
-      const result = await createModel({
+      await createModel({
         variables: {
           name,
-          manufacturerId: parseInt(manufacturerId),
+          manufacturerId: parsedId,
         },
       });
       setModelName(""); // Clear the input after submission
@@ -112,22 +114,25 @@ const ManufacturersPage = () => {
     }
   };
 
-  const handleInfo = (id: any) => {
+  const handleInfo = (id: number) => {
+    
+    const parsedId = typeof id === 'string' ? parseInt(id) : id;
     // Toggle visibility of the manufacturer models
     if (visibleManufacturerId === id) {
       setVisibleManufacturerId(null); // Close if clicked again
     } else {
       setVisibleManufacturerId(id); // Set the clicked manufacturer ID
       getModelsByManufacturer({
-        variables: { manufacturerId: parseInt(id, 10) },
+        variables: { manufacturerId: parsedId },
       }); // Fetch models for this manufacturer
     }
   };
 
-  const handleDelete = async (id: any) => {
-    const confirmToast = async (id: any) => {
+  const handleDelete = async (id: number) => {
+    const confirmToast = async (id: string | number) => {
+      const parsedId = typeof id === 'string' ? parseInt(id, 10) : id;
       await deleteManufacturer({
-        variables: { id: parseInt(id, 10) },
+        variables: { id: parsedId },
       });
 
       toast.success("Deleted!", {
@@ -149,15 +154,16 @@ const ManufacturersPage = () => {
       </div>,
       {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
       }
     );
   };
 
-  const handleModelDelete = async (id: any) => {
-    const confirmToast = async (id: any) => {
+  const handleModelDelete = async (id: number) => {
+    const confirmToast = async (id: number | string) => {
+      const parsedId = typeof id === 'string' ? parseInt(id, 10) : id;
       await deleteModel({
-        variables: { id: parseInt(id, 10) },
+        variables: { id: parsedId },
       });
 
       toast.success("Deleted!", {
@@ -179,7 +185,7 @@ const ManufacturersPage = () => {
       </div>,
       {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
       }
     );
   };

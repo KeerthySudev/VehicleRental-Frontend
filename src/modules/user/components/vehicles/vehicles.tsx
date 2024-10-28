@@ -1,6 +1,6 @@
 "use client";
 
-import React,{ReactHTMLElement, useState} from "react";
+import React,{useState} from "react";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import styles from "./vehicles.module.css";
@@ -20,7 +20,7 @@ const VehiclePage = () => {
     skip: !query,  
   });
   
-  const handleClick = (vehicleId: any) => {
+  const handleClick = (vehicleId: string | number | boolean) => {
     router.push(
       `/vehicle?id=${encodeURIComponent(vehicleId)}`
     );
@@ -29,10 +29,10 @@ const VehiclePage = () => {
   if (error) return <p>Error fetching..: {error.message}</p>;
 
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setQuery(e.target.value);
   };
-  const handleSortChange = (e: any) => {
+  const handleSortChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setSort(e.target.value);
   };
 
@@ -45,7 +45,7 @@ const VehiclePage = () => {
 const renderVehicles = () => {
   if (searchLoading || loading) return <p>Loading...</p>;
   if (searchError) return <p>Error: {searchError.message}</p>;
-  if (error) return <p>Error fetching: {error.message}</p>;
+  
 
   if (vehicles.length === 0) {
     return <p>No vehicles found.</p>;
@@ -96,33 +96,6 @@ const renderVehicles = () => {
       {data && (
         <div className={styles.cardContainer}>
           {renderVehicles()}
-          {/* {data.getAllRentableVehicles.map((vehicle: Vehicle) => (
-    <div key={vehicle.id} className={styles.card}>
-      <div className={styles.cardDetails}>
-        <img src={vehicle.primaryImage} alt={vehicle.name} />
-        <div className={styles.details}>
-          <div className={styles.name}>
-          <h6>{vehicle.manufacturer?.name || vehicle.manufacturerName}</h6>
-              <p>{vehicle.model?.name || vehicle.modelName}</p>
-          </div>
-          <div className={styles.price}>
-            <h6>Rs {vehicle.price}</h6>
-            <p>per day</p>
-          </div>
-        </div>
-      </div>
-      <button onClick={() => handleClick(vehicle.id)}>
-        View Details
-      </button>
-    </div>
-  ))} */}
-
-
-
-
-
-
-
           
         </div>
       )}

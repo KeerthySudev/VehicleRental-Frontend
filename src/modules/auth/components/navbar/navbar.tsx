@@ -12,7 +12,7 @@ const Navbar = () => {
             </div>
             <div className={styles.menu}>
             <a href="/">Home</a>
-            <a href="/vehicles">Vehicles</a>
+            <a href="/vehicles">Cars</a>
             </div>
         </div>
     )

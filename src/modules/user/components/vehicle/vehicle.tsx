@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -8,19 +7,31 @@ import bookingServices from "../../services/bookingServices";
 import vehicleServices from "../../services/vehicleServices";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { RazorpayOptions, windowWithRazorpay} from "@/app/types/bookingType";
+import Cookies from 'js-cookie';
 
 
 const VehiclePage = () => {
+  const [userId, setUserId] = useState(null);
+  const [user, setUser] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showModal, setShowModal] = useState(false);
   const vehicleId = searchParams.get("id");
-  const sessionData = sessionStorage.getItem("userData");
-  const user = sessionData ? JSON.parse(sessionData) : null;
+  useEffect(() => {
+    const userData = Cookies.get("userData");
+    if (userData) {
+      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUserId(parsedUser.id); 
+    }
+    
+  }, []);
   const [deleteBooking] = useMutation(bookingServices.DELETE_BOOKING);
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
+      if (typeof window !== "undefined") {
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.onload = () => {
@@ -30,15 +41,22 @@ const VehiclePage = () => {
         resolve(false);
       };
       document.body.appendChild(script);
+    }
+    else {
+      resolve(false); 
+    }
     });
   };
+
+
+  
 
   const { data, loading, error } = useQuery(vehicleServices.GET_VEHICLE_BY_ID, {
     variables: { id: vehicleId ? parseInt(vehicleId, 10) : null },
     skip: !vehicleId, 
   });
   const price = data?.getVehicleById.price;
-  const formDetails = sessionStorage.getItem("formData");
+  const formDetails = Cookies.get('formData');
   const bookingData = formDetails ? JSON.parse(formDetails) : null;
 
   const today = new Date().toISOString().split("T")[0];
@@ -64,7 +82,7 @@ const VehiclePage = () => {
   const [createBooking] = useMutation(bookingServices.CREATE_BOOKING);
   const [updateBookingPayment] = useMutation(bookingServices.UPDATE_BOOKING_PAYMENT);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -72,9 +90,11 @@ const VehiclePage = () => {
     }));
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    loadRazorpayScript();
+    await loadRazorpayScript();
+    const parsedAmount = typeof amount !== 'number' ? parseFloat(amount) : amount;
+    const parsedId = typeof vehicleId === 'string' ? parseInt(vehicleId, 10) : vehicleId;
     const input = {
       pickupDate: formData.pickupDate,
       pickupTime: formData.pickupTime,
@@ -82,9 +102,9 @@ const VehiclePage = () => {
       dropoffTime: formData.dropoffTime,
       pickupLocation: formData.pickupLocation,
       dropoffLocation: formData.dropoffLocation,
-      amount: parseFloat(amount),
-      vehicleId: parseInt(vehicleId),
-      customerId: parseInt(user.id),
+      amount: parsedAmount,
+      vehicleId: parsedId,
+      customerId: userId ? parseInt(userId, 10) : null,
     };
 
     try {
@@ -92,14 +112,14 @@ const VehiclePage = () => {
 
       if (data.createBooking) {
         const { razorpayOrderId, amount, currency } = data.createBooking;
-        const options = {
+        const options: RazorpayOptions = {
           key: process.env.RAZORPAY_KEY_ID,
           amount: amount * 100, // amount in paise
           currency: currency,
           name: "Vehicle Booking",
           description: "Complete your payment",
           order_id: razorpayOrderId,
-          handler: function (response: any) {
+          handler: function (response) {
             updateBookingPayment({
               variables: {
                 id: data.createBooking.id,
@@ -107,7 +127,7 @@ const VehiclePage = () => {
                 razorpaySignature: response.razorpay_signature,
               },
             }).then(() => {
-              sessionStorage.removeItem("formData");
+              Cookies.remove('formData');
               toast.success("Booked your vehicle!", {
                 position: "top-right",
                 autoClose: 2000,
@@ -119,9 +139,9 @@ const VehiclePage = () => {
             });
           },
           prefill: {
-            name: user.name,
-            email: user.email,
-            contact: user.phone,
+            name: 'username',
+            email: 'email',
+            contact: '6282571196',
           },
           theme: {
             color: "#3399cc",
@@ -137,9 +157,11 @@ const VehiclePage = () => {
             },
           },
         };
-        const rzp1 = new (window as any).Razorpay(options); 
 
-        rzp1.open();
+        if (typeof window !== "undefined") {
+          const rzp1 = new windowWithRazorpay.Razorpay(options); 
+          rzp1.open();
+        }
       }
     } catch (error) {
       console.error("Error creating booking or initiating payment:", error);
@@ -294,7 +316,7 @@ const VehiclePage = () => {
               />
             </div>
             <div className={styles.images}>
-            {data.getVehicleById.otherImages.map((url, index) => (
+            {data.getVehicleById.otherImages.map((url:string, index:number) => (
               <img key={index} src={url} alt={`Vehicle Image ${index + 1}`} />
             ))}
             </div>

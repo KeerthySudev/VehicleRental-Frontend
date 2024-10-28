@@ -27,7 +27,7 @@ const RegistrationForm = () => {
     confirmPassword: "",
   });
 
-  const [validateCustomer , { data, loading, error }] = useMutation(authServices.VALIDATE_CUSTOMER);
+  const [validateCustomer , { loading, error }] = useMutation(authServices.VALIDATE_CUSTOMER);
   const [registerCustomer] = useMutation(authServices.REGISTER_CUSTOMER);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +44,7 @@ const RegistrationForm = () => {
     const handleSendCode = async () => {
       
     try {
-      const { data } = await sendVerification({ variables: { phoneNumber } });
+      await sendVerification({ variables: { phoneNumber } });
       toast.success("OTP sent to your numer for verification!", {
         position: "top-right",
         autoClose: 2000,
